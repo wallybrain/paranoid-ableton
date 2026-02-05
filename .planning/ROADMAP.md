@@ -35,7 +35,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Project scaffolding and OscClient class implementation
+- [x] 01-01-PLAN.md — Project scaffolding and OscClient class implementation (completed 2026-02-05, 2min)
 - [ ] 01-02-PLAN.md — Unit tests and integration smoke test
 
 ### Phase 2: MCP Server Shell
