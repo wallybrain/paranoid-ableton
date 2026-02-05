@@ -13,7 +13,7 @@ Paranoid Ableton delivers Claude-to-Ableton bidirectional control in 8 phases. T
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: OSC Client Foundation** - UDP communication to AbletonOSC with request correlation and error handling
-- [ ] **Phase 2: MCP Server Shell** - MCP SDK integration with tool registration framework
+- [x] **Phase 2: MCP Server Shell** - MCP SDK integration with tool registration framework
 - [ ] **Phase 3: Core Controllers** - Transport, tracks, mixer, scenes control
 - [ ] **Phase 4: MIDI Clip Editing** - Create and edit MIDI clips with note data
 - [ ] **Phase 5: Sample Indexer** - Metadata-driven sample library search (parallel with 3-4)
@@ -50,8 +50,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — MCP server framework with lazy OscClient and ableton_status health tool
-- [ ] 02-02-PLAN.md — Unit tests for server registration and health tool behavior
+- [x] 02-01-PLAN.md — MCP server framework with lazy OscClient and ableton_status health tool (completed 2026-02-05, 1min)
+- [x] 02-02-PLAN.md — Unit tests for server registration and health tool behavior (completed 2026-02-05, 2min)
 
 ### Phase 3: Core Controllers
 **Goal**: Complete transport, track, mixer, and scene control
@@ -158,7 +158,7 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. OSC Client Foundation | 2/2 | Complete | 2026-02-05 |
-| 2. MCP Server Shell | 0/2 | Not started | - |
+| 2. MCP Server Shell | 2/2 | Complete | 2026-02-05 |
 | 3. Core Controllers | 0/TBD | Not started | - |
 | 4. MIDI Clip Editing | 0/TBD | Not started | - |
 | 5. Sample Indexer | 0/TBD | Not started | - |
