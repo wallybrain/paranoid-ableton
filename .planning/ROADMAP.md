@@ -12,7 +12,7 @@ Paranoid Ableton delivers Claude-to-Ableton bidirectional control in 8 phases. T
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: OSC Client Foundation** - UDP communication to AbletonOSC with request correlation and error handling
+- [x] **Phase 1: OSC Client Foundation** - UDP communication to AbletonOSC with request correlation and error handling
 - [ ] **Phase 2: MCP Server Shell** - MCP SDK integration with tool registration framework
 - [ ] **Phase 3: Core Controllers** - Transport, tracks, mixer, scenes control
 - [ ] **Phase 4: MIDI Clip Editing** - Create and edit MIDI clips with note data
@@ -36,7 +36,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 Plans:
 - [x] 01-01-PLAN.md — Project scaffolding and OscClient class implementation (completed 2026-02-05, 2min)
-- [ ] 01-02-PLAN.md — Unit tests and integration smoke test
+- [x] 01-02-PLAN.md — Unit tests and integration smoke test (completed 2026-02-05, 6min)
 
 ### Phase 2: MCP Server Shell
 **Goal**: MCP SDK integration with tool registration framework ready for domain-specific tools
@@ -157,7 +157,7 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. OSC Client Foundation | 0/2 | Planned | - |
+| 1. OSC Client Foundation | 2/2 | Complete | 2026-02-05 |
 | 2. MCP Server Shell | 0/TBD | Not started | - |
 | 3. Core Controllers | 0/TBD | Not started | - |
 | 4. MIDI Clip Editing | 0/TBD | Not started | - |
