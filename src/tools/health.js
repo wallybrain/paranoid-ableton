@@ -42,6 +42,9 @@ export async function handle(name, args) {
       isError: true
     };
   } catch (err) {
+    if (!client) {
+      try { client = getOscClient(); } catch { /* no client available */ }
+    }
     const classified = client
       ? client.classifyError(err)
       : { type: 'UNKNOWN', message: err.message };

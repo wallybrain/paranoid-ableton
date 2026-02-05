@@ -20,3 +20,7 @@ export async function ensureConnected() {
 export function resetClient() {
   oscClient = null;
 }
+
+export function setOscClient(client) {
+  oscClient = client;
+}
