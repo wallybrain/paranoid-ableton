@@ -99,46 +99,57 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TRNS-01 | TBD | Pending |
-| TRNS-02 | TBD | Pending |
-| TRNS-03 | TBD | Pending |
-| TRNS-04 | TBD | Pending |
-| TRNS-05 | TBD | Pending |
-| TRNS-06 | TBD | Pending |
-| TRCK-01 | TBD | Pending |
-| TRCK-02 | TBD | Pending |
-| TRCK-03 | TBD | Pending |
-| TRCK-04 | TBD | Pending |
-| TRCK-05 | TBD | Pending |
-| MIX-01 | TBD | Pending |
-| MIX-02 | TBD | Pending |
-| MIX-03 | TBD | Pending |
-| MIX-04 | TBD | Pending |
-| CLIP-01 | TBD | Pending |
-| CLIP-02 | TBD | Pending |
-| CLIP-03 | TBD | Pending |
-| CLIP-04 | TBD | Pending |
-| MIDI-01 | TBD | Pending |
-| MIDI-02 | TBD | Pending |
-| MIDI-03 | TBD | Pending |
-| MIDI-04 | TBD | Pending |
-| DEV-01 | TBD | Pending |
-| DEV-02 | TBD | Pending |
-| DEV-03 | TBD | Pending |
-| DEV-04 | TBD | Pending |
-| DEV-05 | TBD | Pending |
-| DEV-06 | TBD | Pending |
-| SESS-01 | TBD | Pending |
-| SESS-02 | TBD | Pending |
-| SAMP-01 | TBD | Pending |
-| SAMP-02 | TBD | Pending |
-| SAMP-03 | TBD | Pending |
+| TRNS-01 | Phase 3 | Pending |
+| TRNS-02 | Phase 3 | Pending |
+| TRNS-03 | Phase 3 | Pending |
+| TRNS-04 | Phase 3 | Pending |
+| TRNS-05 | Phase 3 | Pending |
+| TRNS-06 | Phase 3 | Pending |
+| TRCK-01 | Phase 3 | Pending |
+| TRCK-02 | Phase 3 | Pending |
+| TRCK-03 | Phase 3 | Pending |
+| TRCK-04 | Phase 3 | Pending |
+| TRCK-05 | Phase 3 | Pending |
+| MIX-01 | Phase 3 | Pending |
+| MIX-02 | Phase 3 | Pending |
+| MIX-03 | Phase 3 | Pending |
+| MIX-04 | Phase 3 | Pending |
+| CLIP-01 | Phase 3 | Pending |
+| CLIP-02 | Phase 3 | Pending |
+| CLIP-03 | Phase 3 | Pending |
+| CLIP-04 | Phase 3 | Pending |
+| MIDI-01 | Phase 4 | Pending |
+| MIDI-02 | Phase 4 | Pending |
+| MIDI-03 | Phase 4 | Pending |
+| MIDI-04 | Phase 4 | Pending |
+| DEV-01 | Phase 6 | Pending |
+| DEV-02 | Phase 6 | Pending |
+| DEV-03 | Phase 6 | Pending |
+| DEV-04 | Phase 6 | Pending |
+| DEV-05 | Phase 8 | Pending (stretch) |
+| DEV-06 | Phase 8 | Pending (stretch) |
+| SESS-01 | Phase 7 | Pending |
+| SESS-02 | Phase 7 | Pending |
+| SAMP-01 | Phase 5 | Pending |
+| SAMP-02 | Phase 5 | Pending |
+| SAMP-03 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 34 total
-- Mapped to phases: 0
-- Unmapped: 34 (pending roadmap creation)
+- Mapped to phases: 34 (100%)
+- Core requirements (Phases 1-7): 32
+- Stretch items (Phase 8): 2 (DEV-05, DEV-06)
+
+**Phase Distribution:**
+- Phase 1: Infrastructure (addresses 4/7 critical pitfalls)
+- Phase 2: Infrastructure (MCP framework)
+- Phase 3: 19 requirements (Transport, Tracks, Mixer, Scenes/Clips)
+- Phase 4: 4 requirements (MIDI Editing)
+- Phase 5: 3 requirements (Sample Intelligence) — parallel with 3-4
+- Phase 6: 4 requirements (Device Control core)
+- Phase 7: 2 requirements (Session Awareness)
+- Phase 8: 2 requirements (Device Control stretch items)
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-05 after initial definition*
+*Last updated: 2026-02-05 after roadmap creation*
