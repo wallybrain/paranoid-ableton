@@ -47,11 +47,11 @@ Plans:
   2. Test tool can call OSC client and return results to Claude
   3. Errors from OSC layer propagate to Claude with clear messages
   4. Server follows user's established pattern from n8n-mcp, sqlite-mcp, epistemic-mcp servers
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [ ] 02-01-PLAN.md — MCP server framework with lazy OscClient and ableton_status health tool
+- [ ] 02-02-PLAN.md — Unit tests for server registration and health tool behavior
 
 ### Phase 3: Core Controllers
 **Goal**: Complete transport, track, mixer, and scene control
@@ -158,7 +158,7 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. OSC Client Foundation | 2/2 | Complete | 2026-02-05 |
-| 2. MCP Server Shell | 0/TBD | Not started | - |
+| 2. MCP Server Shell | 0/2 | Not started | - |
 | 3. Core Controllers | 0/TBD | Not started | - |
 | 4. MIDI Clip Editing | 0/TBD | Not started | - |
 | 5. Sample Indexer | 0/TBD | Not started | - |
