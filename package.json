@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "type": "module",
   "scripts": {
+    "start": "node src/index.js",
     "test": "node --test test/*.test.js",
     "smoke": "node scripts/smoke-test.js"
   },
@@ -13,6 +14,7 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "osc": "^2.4.5"
   }
 }
