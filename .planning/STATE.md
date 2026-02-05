@@ -5,33 +5,34 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Claude can see and manipulate an Ableton Live session as a creative co-pilot
-**Current focus:** Phase 1 - OSC Client Foundation
+**Current focus:** Phase 2 - MCP Server Shell
 
 ## Current Position
 
-Phase: 1 of 8 (OSC Client Foundation)
-Plan: 2 of 2 (complete)
-Status: Phase Complete — Phase 01 foundation established
-Last activity: 2026-02-05 — Completed 01-02-PLAN.md (Testing & Validation)
+Phase: 2 of 8 (MCP Server Shell)
+Plan: 1 of 2
+Status: In progress
+Last activity: 2026-02-05 — Completed 02-01-PLAN.md (MCP Server Shell)
 
-Progress: [██████████] 100% (Phase 1 complete)
+Progress: [███████░░░] 75% (3 of 4 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 4 min
-- Total execution time: 0.14 hours
+- Total plans completed: 3
+- Average duration: 3 min
+- Total execution time: 0.16 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1 | 2 | 8 min | 4 min |
+| 2 | 1 | 1 min | 1 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2min), 01-02 (6min)
-- Trend: Building momentum
+- Last 5 plans: 01-01 (2min), 01-02 (6min), 02-01 (1min)
+- Trend: Accelerating
 
 *Updated after each plan completion*
 
@@ -52,6 +53,10 @@ Recent decisions affecting current work:
 - 01-02: Use Node.js built-in test runner (node:test) instead of external frameworks like Jest
 - 01-02: Mock UDPPort by extending EventEmitter with auto-response map for deterministic tests
 - 01-02: Smoke test is read-only (no session modifications) for safety
+- 02-01: Low-level Server + setRequestHandler pattern (matching epistemic-mcp)
+- 02-01: Domain-module registry -- each module exports tools[] and handle(), registry aggregates
+- 02-01: Lazy OscClient singleton -- created on first tool call, not at import
+- 02-01: Error codes: short ERROR_CODE: context format (CONNECTION_FAILED, TIMEOUT, PORT_CONFLICT, INTERNAL_ERROR)
 
 ### Pending Todos
 
@@ -71,6 +76,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05T22:25:59Z
-Stopped at: Completed 01-02-PLAN.md (Testing & Validation) - Phase 1 complete
-Resume file: None (ready for Phase 2)
+Last session: 2026-02-05T23:14:00Z
+Stopped at: Completed 02-01-PLAN.md (MCP Server Shell)
+Resume file: None (ready for 02-02)
