@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Core Controllers** - Transport, tracks, mixer, scenes control
 - [x] **Phase 4: MIDI Clip Editing** - Create and edit MIDI clips with note data
 - [x] **Phase 5: Sample Indexer** - Metadata-driven sample library search (parallel with 3-4)
-- [ ] **Phase 6: Device Control** - Load and control instruments and effects
+- [x] **Phase 6: Device Control** - Load and control instruments and effects
 - [ ] **Phase 7: Session Awareness** - Full Live Object Model state snapshots
 - [ ] **Phase 8: Integration & Polish** - Complete workflows and production readiness
 
@@ -113,8 +113,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Device helpers, device domain module (9 tools), and registry wiring
-- [ ] 06-02-PLAN.md — Unit tests for device helpers and tool handlers
+- [x] 06-01-PLAN.md — Device helpers, device domain module (9 tools), and registry wiring (completed 2026-02-06, 2min)
+- [x] 06-02-PLAN.md — Unit tests for device helpers and tool handlers (completed 2026-02-06, 1min)
 
 ### Phase 7: Session Awareness
 **Goal**: Complete Live Object Model state snapshots for context-aware decisions
@@ -160,6 +160,6 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 | 3. Core Controllers | 3/3 | Complete | 2026-02-06 |
 | 4. MIDI Clip Editing | 1/1 | Complete | 2026-02-06 |
 | 5. Sample Indexer | 3/3 | Complete | 2026-02-06 |
-| 6. Device Control | 0/2 | Not started | - |
+| 6. Device Control | 2/2 | Complete | 2026-02-06 |
 | 7. Session Awareness | 0/TBD | Not started | - |
 | 8. Integration & Polish | 0/TBD | Not started | - |

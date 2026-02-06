@@ -45,10 +45,10 @@
 
 ### Device Control
 
-- [ ] **DEV-01**: Claude can list devices on any track
-- [ ] **DEV-02**: Claude can toggle devices on/off
-- [ ] **DEV-03**: Claude can get and set device parameters
-- [ ] **DEV-04**: Claude can load instruments and effects from browser
+- [x] **DEV-01**: Claude can list devices on any track
+- [x] **DEV-02**: Claude can toggle devices on/off
+- [x] **DEV-03**: Claude can get and set device parameters
+- [x] **DEV-04**: Claude can load instruments and effects from browser
 - [ ] **DEV-05**: Claude can use human-readable parameter names for Ableton native devices
 - [ ] **DEV-06**: Claude can browse and load presets for native devices
 
@@ -122,10 +122,10 @@
 | MIDI-02 | Phase 4 | Complete |
 | MIDI-03 | Phase 4 | Complete |
 | MIDI-04 | Phase 4 | Complete |
-| DEV-01 | Phase 6 | Pending |
-| DEV-02 | Phase 6 | Pending |
-| DEV-03 | Phase 6 | Pending |
-| DEV-04 | Phase 6 | Pending |
+| DEV-01 | Phase 6 | Complete |
+| DEV-02 | Phase 6 | Complete |
+| DEV-03 | Phase 6 | Complete |
+| DEV-04 | Phase 6 | Complete |
 | DEV-05 | Phase 8 | Pending (stretch) |
 | DEV-06 | Phase 8 | Pending (stretch) |
 | SESS-01 | Phase 7 | Pending |
@@ -152,4 +152,4 @@
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-06 after Phase 5 completion*
+*Last updated: 2026-02-06 after Phase 6 completion*
