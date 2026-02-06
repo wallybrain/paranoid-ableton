@@ -125,11 +125,11 @@ Plans:
   2. Claude can get project statistics (track counts by type, clip counts, device chain summary, tempo range)
   3. Session snapshots include both cached state (from listeners) and fresh queries (devices, clips)
   4. State queries distinguish between empty slots and populated clips in session view
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [ ] 07-01-PLAN.md — Session helpers (buildSessionSnapshot, buildTrackDetailSnapshot, buildSessionStats), session.js domain module (2 tools), and registry wiring
+- [ ] 07-02-PLAN.md — Unit tests for session helpers and tool handlers
 
 ### Phase 8: Integration & Polish
 **Goal**: Complete workflows combining all systems with production-ready error handling
@@ -161,5 +161,5 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 | 4. MIDI Clip Editing | 1/1 | Complete | 2026-02-06 |
 | 5. Sample Indexer | 3/3 | Complete | 2026-02-06 |
 | 6. Device Control | 2/2 | Complete | 2026-02-06 |
-| 7. Session Awareness | 0/TBD | Not started | - |
+| 7. Session Awareness | 0/2 | Not started | - |
 | 8. Integration & Polish | 0/TBD | Not started | - |
