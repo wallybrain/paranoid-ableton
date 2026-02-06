@@ -94,12 +94,12 @@ Plans:
   3. Claude can load found samples into tracks or instruments
   4. Sample scanning completes asynchronously without blocking server startup
   5. Search results return in under 100ms for 10k+ indexed samples
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
-- [ ] 05-03: TBD
+- [ ] 05-01-PLAN.md — Scanner engine: classifier, index store, and directory scanner with music-metadata
+- [ ] 05-02-PLAN.md — MCP tools (sample_scan, sample_search, sample_get_stats, sample_load) and registry wiring
+- [ ] 05-03-PLAN.md — Unit tests for classifier heuristics, index store search, and scanner guards
 
 ### Phase 6: Device Control
 **Goal**: Load and control Ableton instruments and effects with parameter access
@@ -160,7 +160,7 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 | 2. MCP Server Shell | 2/2 | Complete | 2026-02-05 |
 | 3. Core Controllers | 3/3 | Complete | 2026-02-06 |
 | 4. MIDI Clip Editing | 1/1 | Complete | 2026-02-06 |
-| 5. Sample Indexer | 0/TBD | Not started | - |
+| 5. Sample Indexer | 0/3 | Not started | - |
 | 6. Device Control | 0/TBD | Not started | - |
 | 7. Session Awareness | 0/TBD | Not started | - |
 | 8. Integration & Polish | 0/TBD | Not started | - |
