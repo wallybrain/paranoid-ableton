@@ -364,3 +364,47 @@ export async function buildClipSnapshot(client, trackIndex, clipIndex) {
     note_count: noteCount
   };
 }
+
+// ---------------------------------------------------------------------------
+// Parameter resolution
+// ---------------------------------------------------------------------------
+
+export async function resolveParameterIndex(client, trackIndex, deviceIndex, paramRef) {
+  if (typeof paramRef === 'number') {
+    return paramRef;
+  }
+  if (typeof paramRef !== 'string') {
+    throw new Error('INVALID_PARAMETER: Expected number or string, got ' + typeof paramRef);
+  }
+
+  const namesResp = await client.query('/live/device/get/parameters/name', [trackIndex, deviceIndex], TIMEOUTS.QUERY);
+  const names = namesResp.slice(2);
+  const idx = names.findIndex(n => n === paramRef);
+  if (idx === -1) {
+    throw new Error('PARAMETER_NOT_FOUND: No parameter named "' + paramRef + '" on device ' + deviceIndex);
+  }
+  return idx;
+}
+
+// ---------------------------------------------------------------------------
+// Device snapshot builder
+// ---------------------------------------------------------------------------
+
+const deviceTypeNames = { 1: 'audio_effect', 2: 'instrument', 4: 'midi_effect' };
+
+export async function buildDeviceSnapshot(client, trackIndex, deviceIndex) {
+  const [, , name] = await client.query('/live/device/get/name', [trackIndex, deviceIndex], TIMEOUTS.QUERY);
+  const [, , className] = await client.query('/live/device/get/class_name', [trackIndex, deviceIndex], TIMEOUTS.QUERY);
+  const [, , type] = await client.query('/live/device/get/type', [trackIndex, deviceIndex], TIMEOUTS.QUERY);
+  const [, , numParams] = await client.query('/live/device/get/num_parameters', [trackIndex, deviceIndex], TIMEOUTS.QUERY);
+
+  return {
+    track_index: trackIndex,
+    device_index: deviceIndex,
+    name,
+    class_name: className,
+    type: deviceTypeNames[type] || 'unknown',
+    type_id: type,
+    parameter_count: numParams
+  };
+}
