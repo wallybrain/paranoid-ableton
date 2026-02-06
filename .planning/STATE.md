@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Claude can see and manipulate an Ableton Live session as a creative co-pilot
-**Current focus:** Phase 3 - Core Controllers (COMPLETE, VERIFIED)
+**Current focus:** Phase 4 - MIDI Clip Editing (COMPLETE)
 
 ## Current Position
 
-Phase: 3 of 8 (Core Controllers)
-Plan: 3 of 3
+Phase: 4 of 8 (MIDI Clip Editing)
+Plan: 1 of 1
 Status: Phase complete
-Last activity: 2026-02-06 -- Phase 3 verified (5/5 success criteria, 18/19 requirements)
+Last activity: 2026-02-06 -- Completed 04-01-PLAN.md (8 clip tools, 44 total tools)
 
-Progress: [██████████] 100% (7 of 7 plans complete)
+Progress: [████████████] 100% (8 of 8 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 3 min
-- Total execution time: 0.28 hours
+- Total execution time: 0.33 hours
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [██████████] 100% (7 of 7 plans complete)
 | 1 | 2 | 8 min | 4 min |
 | 2 | 2 | 3 min | 1.5 min |
 | 3 | 3 | 6 min | 2 min |
+| 4 | 1 | 3 min | 3 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (2min), 03-01 (2min), 03-02 (2min), 03-03 (2min)
-- Trend: Stable ~2min
+- Last 5 plans: 03-01 (2min), 03-02 (2min), 03-03 (2min), 04-01 (3min)
+- Trend: Stable ~2-3min
 
 *Updated after each plan completion*
 
@@ -68,6 +69,12 @@ Recent decisions affecting current work:
 - 03-02: Track property uses description instead of oneOf for index/name flexibility
 - 03-03: Utility tools (undo, redo, set_read_only, batch_commands) handled directly in registry
 - 03-03: batch_commands prevents nested batch_commands calls (recursion guard)
+- 04-01: 8 clip tools (clip_create, clip_delete, clip_get, clip_set_name, clip_add_notes, clip_remove_notes, clip_get_notes, clip_set_loop)
+- 04-01: clip.js returns null for clip_launch/clip_stop (scene.js handles those)
+- 04-01: Note batches >100 chunked into separate OSC messages
+- 04-01: Loop point ordering: expand first then shrink to avoid constraint violations
+- 04-01: buildClipSnapshot in helpers.js for reuse across modules
+- 04-01: All write operations return full clip snapshot (consistent pattern)
 
 ### Pending Todos
 
@@ -92,5 +99,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Phase 3 verified and complete -- ready for Phase 4
-Resume file: None (ready for Phase 4)
+Stopped at: Completed 04-01-PLAN.md -- Phase 4 complete, ready for Phase 5
+Resume file: None (ready for Phase 5)
