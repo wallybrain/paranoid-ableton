@@ -79,11 +79,10 @@ Plans:
   2. Claude can add and remove notes in MIDI clips with pitch, velocity, start time, and duration
   3. Claude can read existing note data from MIDI clips
   4. Claude can set loop start, loop end, and clip length
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — Note helpers, clip domain module (8 tools), and registry wiring
 
 ### Phase 5: Sample Indexer
 **Goal**: Metadata-driven sample library search with intelligent filtering
@@ -160,7 +159,7 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 | 1. OSC Client Foundation | 2/2 | Complete | 2026-02-05 |
 | 2. MCP Server Shell | 2/2 | Complete | 2026-02-05 |
 | 3. Core Controllers | 3/3 | Complete | 2026-02-06 |
-| 4. MIDI Clip Editing | 0/TBD | Not started | - |
+| 4. MIDI Clip Editing | 0/1 | Not started | - |
 | 5. Sample Indexer | 0/TBD | Not started | - |
 | 6. Device Control | 0/TBD | Not started | - |
 | 7. Session Awareness | 0/TBD | Not started | - |
