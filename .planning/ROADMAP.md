@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: OSC Client Foundation** - UDP communication to AbletonOSC with request correlation and error handling
 - [x] **Phase 2: MCP Server Shell** - MCP SDK integration with tool registration framework
-- [ ] **Phase 3: Core Controllers** - Transport, tracks, mixer, scenes control
+- [x] **Phase 3: Core Controllers** - Transport, tracks, mixer, scenes control
 - [ ] **Phase 4: MIDI Clip Editing** - Create and edit MIDI clips with note data
 - [ ] **Phase 5: Sample Indexer** - Metadata-driven sample library search (parallel with 3-4)
 - [ ] **Phase 6: Device Control** - Load and control instruments and effects
@@ -66,9 +66,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Shared helpers (value conversion, snapshots, safety guards) and transport module (10 tools)
-- [ ] 03-02-PLAN.md — Track management module (6 tools) and mixer module (8 tools)
-- [ ] 03-03-PLAN.md — Scene/clip module (7 tools), utility tools (4), and registry wiring for all modules
+- [x] 03-01-PLAN.md -- Shared helpers (value conversion, snapshots, safety guards) and transport module (10 tools) (completed 2026-02-06, 2min)
+- [x] 03-02-PLAN.md -- Track management module (6 tools) and mixer module (8 tools) (completed 2026-02-06, 2min)
+- [x] 03-03-PLAN.md -- Scene/clip module (7 tools), utility tools (4), and registry wiring for all modules (completed 2026-02-06, 2min)
 
 ### Phase 4: MIDI Clip Editing
 **Goal**: Create and edit MIDI clips with note data
@@ -159,7 +159,7 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 |-------|----------------|--------|-----------|
 | 1. OSC Client Foundation | 2/2 | Complete | 2026-02-05 |
 | 2. MCP Server Shell | 2/2 | Complete | 2026-02-05 |
-| 3. Core Controllers | 0/3 | Not started | - |
+| 3. Core Controllers | 3/3 | Complete | 2026-02-06 |
 | 4. MIDI Clip Editing | 0/TBD | Not started | - |
 | 5. Sample Indexer | 0/TBD | Not started | - |
 | 6. Device Control | 0/TBD | Not started | - |
