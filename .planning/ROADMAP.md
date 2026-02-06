@@ -16,7 +16,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: MCP Server Shell** - MCP SDK integration with tool registration framework
 - [x] **Phase 3: Core Controllers** - Transport, tracks, mixer, scenes control
 - [x] **Phase 4: MIDI Clip Editing** - Create and edit MIDI clips with note data
-- [ ] **Phase 5: Sample Indexer** - Metadata-driven sample library search (parallel with 3-4)
+- [x] **Phase 5: Sample Indexer** - Metadata-driven sample library search (parallel with 3-4)
 - [ ] **Phase 6: Device Control** - Load and control instruments and effects
 - [ ] **Phase 7: Session Awareness** - Full Live Object Model state snapshots
 - [ ] **Phase 8: Integration & Polish** - Complete workflows and production readiness
@@ -97,9 +97,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Scanner engine: classifier, index store, and directory scanner with music-metadata
-- [ ] 05-02-PLAN.md — MCP tools (sample_scan, sample_search, sample_get_stats, sample_load) and registry wiring
-- [ ] 05-03-PLAN.md — Unit tests for classifier heuristics, index store search, and scanner guards
+- [x] 05-01-PLAN.md — Scanner engine: classifier, index store, and directory scanner with music-metadata (completed 2026-02-06, 3min)
+- [x] 05-02-PLAN.md — MCP tools (sample_scan, sample_search, sample_get_stats, sample_load) and registry wiring (completed 2026-02-06, 1min)
+- [x] 05-03-PLAN.md — Unit tests for classifier heuristics, index store search, and scanner guards (completed 2026-02-06, 2min)
 
 ### Phase 6: Device Control
 **Goal**: Load and control Ableton instruments and effects with parameter access
@@ -160,7 +160,7 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 | 2. MCP Server Shell | 2/2 | Complete | 2026-02-05 |
 | 3. Core Controllers | 3/3 | Complete | 2026-02-06 |
 | 4. MIDI Clip Editing | 1/1 | Complete | 2026-02-06 |
-| 5. Sample Indexer | 0/3 | Not started | - |
+| 5. Sample Indexer | 3/3 | Complete | 2026-02-06 |
 | 6. Device Control | 0/TBD | Not started | - |
 | 7. Session Awareness | 0/TBD | Not started | - |
 | 8. Integration & Polish | 0/TBD | Not started | - |

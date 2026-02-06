@@ -59,9 +59,9 @@
 
 ### Sample Intelligence
 
-- [ ] **SAMP-01**: Claude can scan user sample directories and index metadata (BPM, key, duration, format)
-- [ ] **SAMP-02**: Claude can search samples by instrument type, key, BPM, or character
-- [ ] **SAMP-03**: Claude can load found samples into tracks or instruments
+- [x] **SAMP-01**: Claude can scan user sample directories and index metadata (BPM, key, duration, format)
+- [x] **SAMP-02**: Claude can search samples by instrument type, key, BPM, or character
+- [x] **SAMP-03**: Claude can load found samples into tracks or instruments
 
 ## v2 Requirements
 
@@ -118,10 +118,10 @@
 | CLIP-02 | Phase 3 | Complete |
 | CLIP-03 | Phase 3 | Complete |
 | CLIP-04 | Phase 3 | Complete |
-| MIDI-01 | Phase 4 | Pending |
-| MIDI-02 | Phase 4 | Pending |
-| MIDI-03 | Phase 4 | Pending |
-| MIDI-04 | Phase 4 | Pending |
+| MIDI-01 | Phase 4 | Complete |
+| MIDI-02 | Phase 4 | Complete |
+| MIDI-03 | Phase 4 | Complete |
+| MIDI-04 | Phase 4 | Complete |
 | DEV-01 | Phase 6 | Pending |
 | DEV-02 | Phase 6 | Pending |
 | DEV-03 | Phase 6 | Pending |
@@ -130,9 +130,9 @@
 | DEV-06 | Phase 8 | Pending (stretch) |
 | SESS-01 | Phase 7 | Pending |
 | SESS-02 | Phase 7 | Pending |
-| SAMP-01 | Phase 5 | Pending |
-| SAMP-02 | Phase 5 | Pending |
-| SAMP-03 | Phase 5 | Pending |
+| SAMP-01 | Phase 5 | Complete |
+| SAMP-02 | Phase 5 | Complete |
+| SAMP-03 | Phase 5 | Complete |
 
 **Coverage:**
 - v1 requirements: 34 total
@@ -152,4 +152,4 @@
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-06 after Phase 3 completion*
+*Last updated: 2026-02-06 after Phase 5 completion*
