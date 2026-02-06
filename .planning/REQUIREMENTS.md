@@ -7,34 +7,34 @@
 
 ### Transport Control
 
-- [ ] **TRNS-01**: Claude can start/stop/continue playback
-- [ ] **TRNS-02**: Claude can start/stop recording
-- [ ] **TRNS-03**: Claude can get and set tempo (BPM)
-- [ ] **TRNS-04**: Claude can get and set transport position
-- [ ] **TRNS-05**: Claude can toggle metronome on/off
-- [ ] **TRNS-06**: Claude can get current set name and save project
+- [x] **TRNS-01**: Claude can start/stop/continue playback
+- [x] **TRNS-02**: Claude can start/stop recording
+- [x] **TRNS-03**: Claude can get and set tempo (BPM)
+- [x] **TRNS-04**: Claude can get and set transport position
+- [x] **TRNS-05**: Claude can toggle metronome on/off
+- [~] **TRNS-06**: Claude can get current set name and save project *(AbletonOSC limitation — no API available)*
 
 ### Track Management
 
-- [ ] **TRCK-01**: Claude can list all tracks (MIDI, audio, return, master)
-- [ ] **TRCK-02**: Claude can create and delete MIDI and audio tracks
-- [ ] **TRCK-03**: Claude can select a track
-- [ ] **TRCK-04**: Claude can arm/disarm tracks for recording
-- [ ] **TRCK-05**: Claude can rename tracks
+- [x] **TRCK-01**: Claude can list all tracks (MIDI, audio, return, master)
+- [x] **TRCK-02**: Claude can create and delete MIDI and audio tracks
+- [x] **TRCK-03**: Claude can select a track
+- [x] **TRCK-04**: Claude can arm/disarm tracks for recording
+- [x] **TRCK-05**: Claude can rename tracks
 
 ### Mixer
 
-- [ ] **MIX-01**: Claude can get and set track volume
-- [ ] **MIX-02**: Claude can get and set track pan
-- [ ] **MIX-03**: Claude can mute/unmute and solo/unsolo tracks
-- [ ] **MIX-04**: Claude can get and set send levels to return tracks
+- [x] **MIX-01**: Claude can get and set track volume
+- [x] **MIX-02**: Claude can get and set track pan
+- [x] **MIX-03**: Claude can mute/unmute and solo/unsolo tracks
+- [x] **MIX-04**: Claude can get and set send levels to return tracks
 
 ### Scenes & Clips
 
-- [ ] **CLIP-01**: Claude can list scenes and clips in session view
-- [ ] **CLIP-02**: Claude can launch and stop scenes
-- [ ] **CLIP-03**: Claude can launch and stop individual clips
-- [ ] **CLIP-04**: Claude can create and name scenes
+- [x] **CLIP-01**: Claude can list scenes and clips in session view
+- [x] **CLIP-02**: Claude can launch and stop scenes
+- [x] **CLIP-03**: Claude can launch and stop individual clips
+- [x] **CLIP-04**: Claude can create and name scenes
 
 ### MIDI Editing
 
@@ -99,25 +99,25 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TRNS-01 | Phase 3 | Pending |
-| TRNS-02 | Phase 3 | Pending |
-| TRNS-03 | Phase 3 | Pending |
-| TRNS-04 | Phase 3 | Pending |
-| TRNS-05 | Phase 3 | Pending |
-| TRNS-06 | Phase 3 | Pending |
-| TRCK-01 | Phase 3 | Pending |
-| TRCK-02 | Phase 3 | Pending |
-| TRCK-03 | Phase 3 | Pending |
-| TRCK-04 | Phase 3 | Pending |
-| TRCK-05 | Phase 3 | Pending |
-| MIX-01 | Phase 3 | Pending |
-| MIX-02 | Phase 3 | Pending |
-| MIX-03 | Phase 3 | Pending |
-| MIX-04 | Phase 3 | Pending |
-| CLIP-01 | Phase 3 | Pending |
-| CLIP-02 | Phase 3 | Pending |
-| CLIP-03 | Phase 3 | Pending |
-| CLIP-04 | Phase 3 | Pending |
+| TRNS-01 | Phase 3 | Complete |
+| TRNS-02 | Phase 3 | Complete |
+| TRNS-03 | Phase 3 | Complete |
+| TRNS-04 | Phase 3 | Complete |
+| TRNS-05 | Phase 3 | Complete |
+| TRNS-06 | Phase 3 | Blocked (AbletonOSC limitation) |
+| TRCK-01 | Phase 3 | Complete |
+| TRCK-02 | Phase 3 | Complete |
+| TRCK-03 | Phase 3 | Complete |
+| TRCK-04 | Phase 3 | Complete |
+| TRCK-05 | Phase 3 | Complete |
+| MIX-01 | Phase 3 | Complete |
+| MIX-02 | Phase 3 | Complete |
+| MIX-03 | Phase 3 | Complete |
+| MIX-04 | Phase 3 | Complete |
+| CLIP-01 | Phase 3 | Complete |
+| CLIP-02 | Phase 3 | Complete |
+| CLIP-03 | Phase 3 | Complete |
+| CLIP-04 | Phase 3 | Complete |
 | MIDI-01 | Phase 4 | Pending |
 | MIDI-02 | Phase 4 | Pending |
 | MIDI-03 | Phase 4 | Pending |
@@ -152,4 +152,4 @@
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-05 after roadmap creation*
+*Last updated: 2026-02-06 after Phase 3 completion*
