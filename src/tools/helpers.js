@@ -408,3 +408,117 @@ export async function buildDeviceSnapshot(client, trackIndex, deviceIndex) {
     parameter_count: numParams
   };
 }
+
+// ---------------------------------------------------------------------------
+// Session snapshot builders (aggregate state across all tracks)
+// ---------------------------------------------------------------------------
+
+export async function buildTrackDetailSnapshot(client, trackIndex, numScenes) {
+  const base = await buildTrackSnapshot(client, trackIndex);
+
+  const inputResp = await client.query('/live/track/get/input_routing_type', [trackIndex]);
+  const inputType = inputResp[1];
+
+  const outputResp = await client.query('/live/track/get/output_routing_type', [trackIndex]);
+  const outputType = outputResp[1];
+
+  const foldableResp = await client.query('/live/track/get/is_foldable', [trackIndex]);
+  const isFoldable = foldableResp[1];
+
+  const groupedResp = await client.query('/live/track/get/is_grouped', [trackIndex]);
+  const isGrouped = groupedResp[1];
+
+  const clipNamesResp = await client.query('/live/track/get/clips/name', [trackIndex]);
+  const clipNames = clipNamesResp.slice(1);
+
+  const clips = [];
+  for (let s = 0; s < numScenes; s++) {
+    if (clipNames[s] && clipNames[s] !== '') {
+      clips.push({ scene: s, name: clipNames[s], has_clip: true });
+    }
+  }
+
+  const devices = [];
+  if (base.device_count > 0) {
+    const namesResp = await client.query('/live/track/get/devices/name', [trackIndex]);
+    const devNames = namesResp.slice(1);
+
+    const typesResp = await client.query('/live/track/get/devices/type', [trackIndex]);
+    const devTypes = typesResp.slice(1);
+
+    for (let d = 0; d < base.device_count; d++) {
+      devices.push({ index: d, name: devNames[d], type: deviceTypeNames[devTypes[d]] || 'unknown' });
+    }
+  }
+
+  return {
+    ...base,
+    input_routing: inputType,
+    output_routing: outputType,
+    is_group: !!isFoldable,
+    is_grouped: !!isGrouped,
+    clips,
+    devices
+  };
+}
+
+export async function buildSessionSnapshot(client) {
+  const [numTracks] = await client.query('/live/song/get/num_tracks');
+  const [numScenes] = await client.query('/live/song/get/num_scenes');
+  const transport = await buildTransportSnapshot(client);
+
+  const tracks = [];
+  for (let t = 0; t < numTracks; t++) {
+    tracks.push(await buildTrackDetailSnapshot(client, t, numScenes));
+  }
+
+  return { transport, track_count: numTracks, scene_count: numScenes, tracks };
+}
+
+export async function buildSessionStats(client) {
+  const transport = await buildTransportSnapshot(client);
+  const [numTracks] = await client.query('/live/song/get/num_tracks');
+  const [numScenes] = await client.query('/live/song/get/num_scenes');
+
+  let midiCount = 0;
+  let audioCount = 0;
+  let groupCount = 0;
+  let totalClips = 0;
+  let totalDevices = 0;
+  const deviceSummary = {};
+
+  for (let t = 0; t < numTracks; t++) {
+    const [hasMidi] = await client.query('/live/track/get/has_midi_input', [t]);
+    const [hasAudio] = await client.query('/live/track/get/has_audio_input', [t]);
+    const foldableResp = await client.query('/live/track/get/is_foldable', [t]);
+    const isFoldable = foldableResp[1];
+    const [numDevices] = await client.query('/live/track/get/num_devices', [t]);
+
+    if (isFoldable) groupCount++;
+    else if (hasMidi) midiCount++;
+    else if (hasAudio) audioCount++;
+
+    totalDevices += numDevices;
+
+    const clipNamesResp = await client.query('/live/track/get/clips/name', [t]);
+    const clipNames = clipNamesResp.slice(1);
+    totalClips += clipNames.filter(n => n && n !== '').length;
+
+    if (numDevices > 0) {
+      const devNamesResp = await client.query('/live/track/get/devices/name', [t]);
+      const devNames = devNamesResp.slice(1);
+      for (const name of devNames) {
+        deviceSummary[name] = (deviceSummary[name] || 0) + 1;
+      }
+    }
+  }
+
+  return {
+    transport,
+    track_counts: { total: numTracks, midi: midiCount, audio: audioCount, group: groupCount },
+    scene_count: numScenes,
+    total_clips: totalClips,
+    total_devices: totalDevices,
+    device_summary: deviceSummary
+  };
+}
