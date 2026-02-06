@@ -4,11 +4,12 @@ import * as track from './track.js';
 import * as mixer from './mixer.js';
 import * as scene from './scene.js';
 import * as clip from './clip.js';
+import * as sample from './sample.js';
 import { ensureConnected } from './shared.js';
 import { guardWrite, isReadOnly, setReadOnly } from './helpers.js';
 import { TIMEOUTS } from '../osc-client.js';
 
-const modules = [health, transport, track, mixer, scene, clip];
+const modules = [health, transport, track, mixer, scene, clip, sample];
 
 const utilityTools = [
   {
