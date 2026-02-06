@@ -38,10 +38,10 @@
 
 ### MIDI Editing
 
-- [ ] **MIDI-01**: Claude can create MIDI clips on tracks
-- [ ] **MIDI-02**: Claude can add and remove notes in MIDI clips
-- [ ] **MIDI-03**: Claude can get note data from MIDI clips
-- [ ] **MIDI-04**: Claude can set loop start, end, and clip length
+- [x] **MIDI-01**: Claude can create MIDI clips on tracks
+- [x] **MIDI-02**: Claude can add and remove notes in MIDI clips
+- [x] **MIDI-03**: Claude can get note data from MIDI clips
+- [x] **MIDI-04**: Claude can set loop start, end, and clip length
 
 ### Device Control
 
