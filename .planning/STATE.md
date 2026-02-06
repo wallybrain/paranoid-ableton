@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Claude can see and manipulate an Ableton Live session as a creative co-pilot
-**Current focus:** Phase 2 - MCP Server Shell (complete)
+**Current focus:** Phase 3 - Core Controllers (in progress)
 
 ## Current Position
 
-Phase: 2 of 8 (MCP Server Shell)
-Plan: 2 of 2
-Status: Phase complete
-Last activity: 2026-02-05 — Completed 02-02-PLAN.md (Testing & Validation)
+Phase: 3 of 8 (Core Controllers)
+Plan: 1 of 3
+Status: In progress
+Last activity: 2026-02-06 — Completed 03-01-PLAN.md (Helpers & Transport)
 
-Progress: [██████████] 100% (4 of 4 plans complete)
+Progress: [███████░░░] 71% (5 of 7 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
+- Total plans completed: 5
 - Average duration: 3 min
-- Total execution time: 0.20 hours
+- Total execution time: 0.23 hours
 
 **By Phase:**
 
@@ -29,10 +29,11 @@ Progress: [██████████] 100% (4 of 4 plans complete)
 |-------|-------|-------|----------|
 | 1 | 2 | 8 min | 4 min |
 | 2 | 2 | 3 min | 1.5 min |
+| 3 | 1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2min), 01-02 (6min), 02-01 (1min), 02-02 (2min)
-- Trend: Accelerating
+- Last 5 plans: 01-02 (6min), 02-01 (1min), 02-02 (2min), 03-01 (2min)
+- Trend: Stable ~2min
 
 *Updated after each plan completion*
 
@@ -59,6 +60,9 @@ Recent decisions affecting current work:
 - 02-01: Error codes: short ERROR_CODE: context format (CONNECTION_FAILED, TIMEOUT, PORT_CONFLICT, INTERNAL_ERROR)
 - 02-02: setOscClient() added to shared.js for test mock injection (boundary mocking pattern)
 - 02-02: Mock classifyError checks EADDRINUSE before isReady for correct PORT_CONFLICT testing
+- 03-01: Volume 0dB = 0.85 normalized (community convention, needs empirical verification)
+- 03-01: Write operations return full transport snapshot for state context
+- 03-01: transport_record checks status before toggling to avoid Pitfall 6
 
 ### Pending Todos
 
@@ -70,6 +74,9 @@ None yet.
 - AbletonOSC installation on Ubuntu Linux not yet verified (research validated macOS paths only) - smoke test available for validation when Ableton launches
 - AbletonOSC Live 12 Suite compatibility assumed but not tested - smoke test available for validation when Ableton launches
 
+**Phase 3 (in progress):**
+- Volume unity point (0.85 = 0dB) is community convention -- needs empirical verification against actual Ableton Live 12
+
 **Phase 5 (Sample Indexer):**
 - User's sample library formats and naming conventions unknown, may require heuristic adjustments
 
@@ -78,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-05T23:19:00Z
-Stopped at: Completed 02-02-PLAN.md (Testing & Validation) -- Phase 2 complete
-Resume file: None (ready for Phase 3)
+Last session: 2026-02-06T00:27:00Z
+Stopped at: Completed 03-01-PLAN.md (Helpers & Transport)
+Resume file: None (ready for 03-02)
