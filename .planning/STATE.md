@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-05)
 
 **Core value:** Claude can see and manipulate an Ableton Live session as a creative co-pilot
-**Current focus:** Phase 5 - Sample Indexer (Plan 01 complete)
+**Current focus:** Phase 5 - Sample Indexer (Plan 02 complete)
 
 ## Current Position
 
 Phase: 5 of 8 (Sample Indexer)
-Plan: 1 of 3
+Plan: 2 of 3
 Status: In progress
-Last activity: 2026-02-06 -- Completed 05-01-PLAN.md (sample indexer engine)
+Last activity: 2026-02-06 -- Completed 05-02-PLAN.md (sample MCP tools)
 
-Progress: [█████████████░░░] 82% (9 of 11 plans complete)
+Progress: [██████████████░░] 91% (10 of 11 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: 3 min
-- Total execution time: 0.37 hours
+- Total execution time: 0.39 hours
 
 **By Phase:**
 
@@ -31,10 +31,10 @@ Progress: [█████████████░░░] 82% (9 of 11 plans 
 | 2 | 2 | 3 min | 1.5 min |
 | 3 | 3 | 6 min | 2 min |
 | 4 | 1 | 3 min | 3 min |
-| 5 | 1 | 3 min | 3 min |
+| 5 | 2 | 4 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (2min), 03-03 (2min), 04-01 (3min), 05-01 (3min)
+- Last 5 plans: 03-03 (2min), 04-01 (3min), 05-01 (3min), 05-02 (1min)
 - Trend: Stable ~2-3min
 
 *Updated after each plan completion*
@@ -79,6 +79,10 @@ Recent decisions affecting current work:
 - 05-01: Key regex uses delimiter-aware matching instead of \b word boundaries (underscores are word chars)
 - 05-01: Index store uses plain array + Map for O(1) path lookups (no classes, module-level state)
 - 05-01: Embedded metadata (bpm, key) takes priority over filename heuristics
+- 05-02: Sample tools are filesystem-only (no OSC/ensureConnected needed)
+- 05-02: loadIndex() called idempotently at start of read handlers
+- 05-02: sample_search returns hint when index empty, guiding user to run scan first
+- 05-02: sample_load returns drag-and-drop instructions, track param reserved for future API
 
 ### Pending Todos
 
@@ -103,5 +107,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-06
-Stopped at: Completed 05-01-PLAN.md (sample indexer engine)
+Stopped at: Completed 05-02-PLAN.md (sample MCP tools)
 Resume file: None
