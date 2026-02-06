@@ -1,0 +1,271 @@
+// Volume unity point: 0.85 normalized = 0dB is from community AbletonOSC
+// implementations. This needs empirical verification against actual Ableton
+// Live 12 values. The mapping may differ slightly per version.
+
+// ---------------------------------------------------------------------------
+// Volume conversion (dB <-> normalized 0.0-1.0)
+// ---------------------------------------------------------------------------
+
+/**
+ * Convert dB value to Ableton's normalized 0.0-1.0 range.
+ * -70dB or below -> 0.0, 0dB -> 0.85 (unity), +6dB -> 1.0
+ */
+export function dbToNormalized(db) {
+  if (db <= -70) return 0.0;
+  if (db <= 0) {
+    return Math.min(1.0, Math.max(0.0, 0.85 * Math.pow(10, db / 20)));
+  }
+  // 0 to +6dB: linear interpolation from 0.85 to 1.0
+  return Math.min(1.0, Math.max(0.0, 0.85 + (db / 6) * 0.15));
+}
+
+/**
+ * Convert Ableton's normalized 0.0-1.0 value back to dB.
+ */
+export function normalizedToDb(value) {
+  if (value < 1e-7) return -Infinity;
+  if (value <= 0.85) {
+    return 20 * Math.log10(value / 0.85);
+  }
+  // Above 0.85: linear mapping back to 0-6dB
+  return Math.min(6, ((value - 0.85) / 0.15) * 6);
+}
+
+/**
+ * Parse volume input from various formats.
+ * Accepts: "0db", "-6dB", "-inf", 0.0-1.0 float
+ */
+export function parseVolumeInput(input) {
+  if (typeof input === 'string') {
+    const lower = input.toLowerCase().trim();
+    if (lower === '-inf' || lower === '-infinity') return 0.0;
+    if (lower.endsWith('db')) {
+      const db = parseFloat(lower);
+      if (isNaN(db)) throw new Error('INVALID_VOLUME: Cannot parse dB value from "' + input + '"');
+      return dbToNormalized(db);
+    }
+    // Try parsing as number
+    const num = parseFloat(lower);
+    if (isNaN(num)) throw new Error('INVALID_VOLUME: Cannot parse volume from "' + input + '"');
+    if (num < 0 || num > 1) throw new Error('INVALID_VOLUME: Normalized volume must be 0.0-1.0, got ' + num);
+    return num;
+  }
+  if (typeof input === 'number') {
+    if (input < 0 || input > 1) throw new Error('INVALID_VOLUME: Normalized volume must be 0.0-1.0, got ' + input);
+    return input;
+  }
+  throw new Error('INVALID_VOLUME: Expected number or string, got ' + typeof input);
+}
+
+// ---------------------------------------------------------------------------
+// Pan conversion (MIDI 0-127 <-> float -1.0 to 1.0)
+// ---------------------------------------------------------------------------
+
+/**
+ * Convert MIDI pan value (0-127) to float (-1.0 to 1.0).
+ * 0 = hard left, 64 = center, 127 = hard right
+ */
+export function midiPanToFloat(midiValue) {
+  const clamped = Math.min(127, Math.max(0, Math.round(midiValue)));
+  return (clamped - 64) / 64;
+}
+
+/**
+ * Convert float pan (-1.0 to 1.0) to MIDI (0-127).
+ */
+export function floatPanToMidi(floatValue) {
+  const raw = Math.round(floatValue * 64 + 64);
+  return Math.min(127, Math.max(0, raw));
+}
+
+/**
+ * Parse pan input (MIDI 0-127 convention per user decision).
+ */
+export function parsePanInput(input) {
+  const value = typeof input === 'string' ? parseInt(input, 10) : input;
+  if (typeof value !== 'number' || isNaN(value)) {
+    throw new Error('INVALID_PAN: Expected integer 0-127, got "' + input + '"');
+  }
+  if (value < 0 || value > 127) {
+    throw new Error('INVALID_PAN: MIDI pan must be 0-127, got ' + value);
+  }
+  return midiPanToFloat(value);
+}
+
+// ---------------------------------------------------------------------------
+// Track resolution
+// ---------------------------------------------------------------------------
+
+/**
+ * Resolve a track reference (index or name) to a 0-based track index.
+ * Numbers are returned as-is (0-based per user decision).
+ * Strings trigger an OSC query to find the track by name.
+ */
+export async function resolveTrackIndex(client, trackRef) {
+  if (typeof trackRef === 'number') {
+    return trackRef;
+  }
+  if (typeof trackRef !== 'string') {
+    throw new Error('INVALID_TRACK: Expected number or string, got ' + typeof trackRef);
+  }
+
+  const [numTracks] = await client.query('/live/song/get/num_tracks');
+
+  for (let i = 0; i < numTracks; i++) {
+    const [name] = await client.query('/live/track/get/name', [i]);
+    if (name === trackRef) return i;
+  }
+
+  throw new Error('TRACK_NOT_FOUND: No track named "' + trackRef + '"');
+}
+
+// ---------------------------------------------------------------------------
+// Tempo parsing
+// ---------------------------------------------------------------------------
+
+/**
+ * Parse tempo input: absolute BPM, relative change, or keyword.
+ * Accepts: number (absolute), '+5'/'-10' (relative), 'double'/'half' (multiply).
+ * Validates result is 20-999 BPM.
+ */
+export function parseTempoInput(input, currentTempo) {
+  let result;
+
+  if (typeof input === 'number') {
+    result = input;
+  } else if (typeof input === 'string') {
+    const lower = input.toLowerCase().trim();
+    if (lower === 'double') {
+      result = currentTempo * 2;
+    } else if (lower === 'half') {
+      result = currentTempo / 2;
+    } else if (lower.startsWith('+') || lower.startsWith('-')) {
+      result = currentTempo + parseFloat(lower);
+    } else {
+      result = parseFloat(lower);
+    }
+  } else {
+    throw new Error('INVALID_TEMPO: Expected number or string, got ' + typeof input);
+  }
+
+  if (isNaN(result)) {
+    throw new Error('INVALID_TEMPO: Cannot parse tempo from "' + input + '"');
+  }
+  if (result < 20 || result > 999) {
+    throw new Error('INVALID_TEMPO: Tempo must be 20-999 BPM, got ' + result);
+  }
+
+  return result;
+}
+
+// ---------------------------------------------------------------------------
+// Snapshot builders (async -- query OSC)
+// ---------------------------------------------------------------------------
+
+/**
+ * Build a transport state snapshot from live OSC queries.
+ */
+export async function buildTransportSnapshot(client) {
+  const [tempo] = await client.query('/live/song/get/tempo');
+  const [isPlaying] = await client.query('/live/song/get/is_playing');
+  const [currentTime] = await client.query('/live/song/get/current_song_time');
+  const [metronome] = await client.query('/live/song/get/metronome');
+  const [sigNum] = await client.query('/live/song/get/signature_numerator');
+  const [sigDen] = await client.query('/live/song/get/signature_denominator');
+  const [recordStatus] = await client.query('/live/song/get/session_record_status');
+
+  return {
+    tempo,
+    is_playing: !!isPlaying,
+    recording: recordStatus === 1 || recordStatus === 2,
+    current_time: currentTime,
+    metronome: !!metronome,
+    time_signature: sigNum + '/' + sigDen
+  };
+}
+
+/**
+ * Build a track state snapshot from live OSC queries.
+ */
+export async function buildTrackSnapshot(client, trackIndex) {
+  const [name] = await client.query('/live/track/get/name', [trackIndex]);
+  const [volume] = await client.query('/live/track/get/volume', [trackIndex]);
+  const [panning] = await client.query('/live/track/get/panning', [trackIndex]);
+  const [mute] = await client.query('/live/track/get/mute', [trackIndex]);
+  const [solo] = await client.query('/live/track/get/solo', [trackIndex]);
+  const [arm] = await client.query('/live/track/get/arm', [trackIndex]);
+  const [hasMidi] = await client.query('/live/track/get/has_midi_input', [trackIndex]);
+  const [hasAudio] = await client.query('/live/track/get/has_audio_input', [trackIndex]);
+  const [numDevices] = await client.query('/live/track/get/num_devices', [trackIndex]);
+
+  let type = 'unknown';
+  if (hasMidi) type = 'midi';
+  else if (hasAudio) type = 'audio';
+
+  return {
+    index: trackIndex,
+    name,
+    type,
+    volume: {
+      normalized: volume,
+      db: normalizedToDb(volume)
+    },
+    pan: {
+      normalized: panning,
+      midi: floatPanToMidi(panning)
+    },
+    mute: !!mute,
+    solo: !!solo,
+    arm: !!arm,
+    device_count: numDevices
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Read-only mode gating
+// ---------------------------------------------------------------------------
+
+let readOnlyMode = false;
+
+export function isReadOnly() {
+  return readOnlyMode;
+}
+
+export function setReadOnly(enabled) {
+  readOnlyMode = !!enabled;
+}
+
+export function guardWrite(toolName) {
+  if (readOnlyMode) {
+    return {
+      content: [{
+        type: 'text',
+        text: 'READ_ONLY: Tool "' + toolName + '" blocked. Read-only mode is active. Use set_read_only(false) to disable.'
+      }],
+      isError: true
+    };
+  }
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// Two-step delete state
+// ---------------------------------------------------------------------------
+
+const pendingDeletes = new Map();
+
+export function getPendingDelete(trackIndex) {
+  return pendingDeletes.get(trackIndex);
+}
+
+export function setPendingDelete(trackIndex, snapshot) {
+  pendingDeletes.set(trackIndex, snapshot);
+}
+
+export function clearPendingDelete(trackIndex) {
+  pendingDeletes.delete(trackIndex);
+}
+
+export function clearAllPendingDeletes() {
+  pendingDeletes.clear();
+}
