@@ -54,7 +54,7 @@ Plans:
 - [x] 02-02-PLAN.md — Unit tests for server registration and health tool behavior (completed 2026-02-05, 2min)
 
 ### Phase 3: Core Controllers
-**Goal**: Complete transport, track, mixer, and scene control
+**Goal**: Complete transport, track, mixer, and scene control with ~36 MCP tools across 5 domain modules
 **Depends on**: Phase 2 (MCP server)
 **Requirements**: TRNS-01, TRNS-02, TRNS-03, TRNS-04, TRNS-05, TRNS-06, TRCK-01, TRCK-02, TRCK-03, TRCK-04, TRCK-05, MIX-01, MIX-02, MIX-03, MIX-04, CLIP-01, CLIP-02, CLIP-03, CLIP-04
 **Success Criteria** (what must be TRUE):
@@ -63,12 +63,12 @@ Plans:
   3. Claude can adjust volume, pan, sends, and mute/solo any track
   4. Claude can list all scenes and clips, launch scenes, and stop playback
   5. Claude can create and name new scenes
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
-- [ ] 03-03: TBD
+- [ ] 03-01-PLAN.md — Shared helpers (value conversion, snapshots, safety guards) and transport module (10 tools)
+- [ ] 03-02-PLAN.md — Track management module (6 tools) and mixer module (8 tools)
+- [ ] 03-03-PLAN.md — Scene/clip module (7 tools), utility tools (4), and registry wiring for all modules
 
 ### Phase 4: MIDI Clip Editing
 **Goal**: Create and edit MIDI clips with note data
@@ -159,7 +159,7 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 |-------|----------------|--------|-----------|
 | 1. OSC Client Foundation | 2/2 | Complete | 2026-02-05 |
 | 2. MCP Server Shell | 2/2 | Complete | 2026-02-05 |
-| 3. Core Controllers | 0/TBD | Not started | - |
+| 3. Core Controllers | 0/3 | Not started | - |
 | 4. MIDI Clip Editing | 0/TBD | Not started | - |
 | 5. Sample Indexer | 0/TBD | Not started | - |
 | 6. Device Control | 0/TBD | Not started | - |
