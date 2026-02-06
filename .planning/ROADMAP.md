@@ -110,12 +110,11 @@ Plans:
   2. Claude can toggle devices on/off
   3. Claude can get and set device parameters by index or name
   4. Claude can load Ableton native instruments and effects from browser
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
-- [ ] 06-03: TBD
+- [ ] 06-01-PLAN.md — Device helpers, device domain module (9 tools), and registry wiring
+- [ ] 06-02-PLAN.md — Unit tests for device helpers and tool handlers
 
 ### Phase 7: Session Awareness
 **Goal**: Complete Live Object Model state snapshots for context-aware decisions
@@ -161,6 +160,6 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 | 3. Core Controllers | 3/3 | Complete | 2026-02-06 |
 | 4. MIDI Clip Editing | 1/1 | Complete | 2026-02-06 |
 | 5. Sample Indexer | 3/3 | Complete | 2026-02-06 |
-| 6. Device Control | 0/TBD | Not started | - |
+| 6. Device Control | 0/2 | Not started | - |
 | 7. Session Awareness | 0/TBD | Not started | - |
 | 8. Integration & Polish | 0/TBD | Not started | - |
