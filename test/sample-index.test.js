@@ -150,3 +150,189 @@ describe('classifier', () => {
     });
   });
 });
+
+// --- Index Store Tests ---
+
+function makeEntry(overrides = {}) {
+  return {
+    path: '/test/sample.wav',
+    relative_path: 'sample.wav',
+    filename: 'sample.wav',
+    extension: '.wav',
+    duration_ms: 500,
+    sample_rate: 44100,
+    bit_depth: 16,
+    channels: 1,
+    codec: 'wav',
+    bpm: null,
+    key: null,
+    instrument_type: null,
+    character_tags: [],
+    file_size: 44100,
+    mtime_ms: 1000,
+    scan_root: '/test',
+    ...overrides
+  };
+}
+
+describe('index-store', () => {
+  beforeEach(() => {
+    clearIndex();
+  });
+
+  it('addEntry + getEntryByPath retrieves added entry', () => {
+    const entry = makeEntry({ path: '/test/kick_01.wav', filename: 'kick_01.wav' });
+    addEntry(entry);
+    const retrieved = getEntryByPath('/test/kick_01.wav');
+    assert.strictEqual(retrieved.path, '/test/kick_01.wav');
+    assert.strictEqual(retrieved.filename, 'kick_01.wav');
+    assert.strictEqual(retrieved.extension, '.wav');
+  });
+
+  it('getEntryByPath returns null for missing path', () => {
+    const result = getEntryByPath('/nonexistent/file.wav');
+    assert.strictEqual(result, null);
+  });
+
+  it('upsert updates existing entry by path', () => {
+    const entry1 = makeEntry({ path: '/test/loop.wav', bpm: 120 });
+    addEntry(entry1);
+    assert.strictEqual(getEntryByPath('/test/loop.wav').bpm, 120);
+
+    const entry2 = makeEntry({ path: '/test/loop.wav', bpm: 140 });
+    addEntry(entry2);
+    assert.strictEqual(getEntryByPath('/test/loop.wav').bpm, 140);
+
+    const stats = getStats();
+    assert.strictEqual(stats.total_samples, 1);
+  });
+
+  it('search by instrument_type returns matching entries', () => {
+    addEntry(makeEntry({ path: '/test/kick_01.wav', instrument_type: 'kick' }));
+    addEntry(makeEntry({ path: '/test/snare_01.wav', instrument_type: 'snare' }));
+    addEntry(makeEntry({ path: '/test/kick_02.wav', instrument_type: 'kick' }));
+
+    const results = search({ instrument_type: 'kick' });
+    assert.strictEqual(results.length, 2);
+    assert.ok(results.every(r => r.instrument_type === 'kick'));
+  });
+
+  it('search by bpm range returns entries within range', () => {
+    addEntry(makeEntry({ path: '/test/a.wav', bpm: 100 }));
+    addEntry(makeEntry({ path: '/test/b.wav', bpm: 120 }));
+    addEntry(makeEntry({ path: '/test/c.wav', bpm: 140 }));
+    addEntry(makeEntry({ path: '/test/d.wav', bpm: null }));
+
+    const results = search({ bpm_min: 110, bpm_max: 130 });
+    assert.strictEqual(results.length, 1);
+    assert.strictEqual(results[0].bpm, 120);
+  });
+
+  it('search by bpm range excludes null-bpm entries', () => {
+    addEntry(makeEntry({ path: '/test/a.wav', bpm: null }));
+    addEntry(makeEntry({ path: '/test/b.wav', bpm: 80 }));
+
+    const results = search({ bpm_min: 60, bpm_max: 200 });
+    assert.strictEqual(results.length, 1);
+    assert.strictEqual(results[0].bpm, 80);
+  });
+
+  it('search by key returns matching entries', () => {
+    addEntry(makeEntry({ path: '/test/a.wav', key: 'Cmin' }));
+    addEntry(makeEntry({ path: '/test/b.wav', key: 'F#maj' }));
+    addEntry(makeEntry({ path: '/test/c.wav', key: null }));
+
+    const results = search({ key: 'Cmin' });
+    assert.strictEqual(results.length, 1);
+    assert.strictEqual(results[0].key, 'Cmin');
+  });
+
+  it('search by text matches filename', () => {
+    addEntry(makeEntry({ path: '/test/kick_hard.wav', filename: 'kick_hard.wav' }));
+    addEntry(makeEntry({ path: '/test/snare_soft.wav', filename: 'snare_soft.wav' }));
+
+    const results = search({ text: 'kick' });
+    assert.strictEqual(results.length, 1);
+    assert.strictEqual(results[0].filename, 'kick_hard.wav');
+  });
+
+  it('search by character matches character_tags', () => {
+    addEntry(makeEntry({ path: '/test/a.wav', character_tags: ['punchy', 'dark'] }));
+    addEntry(makeEntry({ path: '/test/b.wav', character_tags: ['warm'] }));
+
+    const results = search({ character: 'punchy' });
+    assert.strictEqual(results.length, 1);
+    assert.deepStrictEqual(results[0].character_tags, ['punchy', 'dark']);
+  });
+
+  it('search by format filters by extension', () => {
+    addEntry(makeEntry({ path: '/test/a.wav', extension: '.wav' }));
+    addEntry(makeEntry({ path: '/test/b.aiff', extension: '.aiff' }));
+
+    const results = search({ format: 'wav' });
+    assert.strictEqual(results.length, 1);
+    assert.strictEqual(results[0].extension, '.wav');
+  });
+
+  it('search by format handles dot prefix', () => {
+    addEntry(makeEntry({ path: '/test/a.wav', extension: '.wav' }));
+    addEntry(makeEntry({ path: '/test/b.aiff', extension: '.aiff' }));
+
+    const results = search({ format: '.wav' });
+    assert.strictEqual(results.length, 1);
+    assert.strictEqual(results[0].extension, '.wav');
+  });
+
+  it('search with limit caps results', () => {
+    for (let i = 0; i < 10; i++) {
+      addEntry(makeEntry({ path: `/test/sample_${i}.wav` }));
+    }
+
+    const results = search({ limit: 3 });
+    assert.strictEqual(results.length, 3);
+  });
+
+  it('search with combined filters uses AND logic', () => {
+    addEntry(makeEntry({ path: '/test/a.wav', instrument_type: 'kick', bpm: 120 }));
+    addEntry(makeEntry({ path: '/test/b.wav', instrument_type: 'kick', bpm: 80 }));
+    addEntry(makeEntry({ path: '/test/c.wav', instrument_type: 'snare', bpm: 120 }));
+
+    const results = search({ instrument_type: 'kick', bpm_min: 100 });
+    assert.strictEqual(results.length, 1);
+    assert.strictEqual(results[0].path, '/test/a.wav');
+  });
+
+  it('getStats returns correct counts', () => {
+    addEntry(makeEntry({ path: '/test/a.wav', instrument_type: 'kick', extension: '.wav', scan_root: '/test' }));
+    addEntry(makeEntry({ path: '/test/b.aiff', instrument_type: 'kick', extension: '.aiff', scan_root: '/test' }));
+    addEntry(makeEntry({ path: '/test/c.wav', instrument_type: 'snare', extension: '.wav', scan_root: '/other' }));
+
+    const stats = getStats();
+    assert.strictEqual(stats.total_samples, 3);
+    assert.strictEqual(stats.by_instrument_type.kick, 2);
+    assert.strictEqual(stats.by_instrument_type.snare, 1);
+    assert.strictEqual(stats.by_format['.wav'], 2);
+    assert.strictEqual(stats.by_format['.aiff'], 1);
+    assert.strictEqual(stats.by_scan_root['/test'], 2);
+    assert.strictEqual(stats.by_scan_root['/other'], 1);
+  });
+
+  it('clearIndex resets all entries', () => {
+    addEntry(makeEntry({ path: '/test/a.wav' }));
+    addEntry(makeEntry({ path: '/test/b.wav' }));
+    assert.strictEqual(getStats().total_samples, 2);
+
+    clearIndex();
+    assert.strictEqual(getStats().total_samples, 0);
+    assert.strictEqual(getEntryByPath('/test/a.wav'), null);
+  });
+});
+
+// --- Scanner Guard Tests ---
+
+describe('scanner', () => {
+  it('getScanStatus returns scanning false when idle', () => {
+    const status = getScanStatus();
+    assert.strictEqual(status.scanning, false);
+  });
+});
