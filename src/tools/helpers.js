@@ -1,3 +1,5 @@
+import { TIMEOUTS } from '../osc-client.js';
+
 // Volume unity point: 0.85 normalized = 0dB is from community AbletonOSC
 // implementations. This needs empirical verification against actual Ableton
 // Live 12 values. The mapping may differ slightly per version.
@@ -268,4 +270,97 @@ export function clearPendingDelete(trackIndex) {
 
 export function clearAllPendingDeletes() {
   pendingDeletes.clear();
+}
+
+// ---------------------------------------------------------------------------
+// Note serialization (structured JSON <-> flat OSC array)
+// ---------------------------------------------------------------------------
+
+export function notesToFlatArray(notes) {
+  const flat = [];
+  for (const note of notes) {
+    flat.push(
+      note.pitch,
+      note.start_time,
+      note.duration,
+      note.velocity !== undefined ? note.velocity : 100,
+      note.mute ? 1 : 0
+    );
+  }
+  return flat;
+}
+
+export function flatArrayToNotes(flat) {
+  if (!flat || flat.length === 0) return [];
+  const notes = [];
+  for (let i = 0; i + 4 < flat.length; i += 5) {
+    notes.push({
+      pitch: flat[i],
+      start_time: flat[i + 1],
+      duration: flat[i + 2],
+      velocity: flat[i + 3],
+      mute: !!flat[i + 4]
+    });
+  }
+  return notes;
+}
+
+// ---------------------------------------------------------------------------
+// Note validation
+// ---------------------------------------------------------------------------
+
+export function validateNote(note, index) {
+  if (!Number.isInteger(note.pitch) || note.pitch < 0 || note.pitch > 127) {
+    throw new Error('INVALID_NOTE[' + index + ']: pitch must be integer 0-127, got ' + note.pitch);
+  }
+  if (typeof note.start_time !== 'number' || note.start_time < 0) {
+    throw new Error('INVALID_NOTE[' + index + ']: start_time must be >= 0, got ' + note.start_time);
+  }
+  if (typeof note.duration !== 'number' || note.duration <= 0) {
+    throw new Error('INVALID_NOTE[' + index + ']: duration must be > 0, got ' + note.duration);
+  }
+  if (note.velocity !== undefined) {
+    if (!Number.isInteger(note.velocity) || note.velocity < 1 || note.velocity > 127) {
+      throw new Error('INVALID_NOTE[' + index + ']: velocity must be 1-127, got ' + note.velocity);
+    }
+  }
+  return null;
+}
+
+export function validateNotes(notes) {
+  if (!Array.isArray(notes) || notes.length === 0) {
+    throw new Error('INVALID_NOTES: notes array must not be empty');
+  }
+  for (let i = 0; i < notes.length; i++) {
+    validateNote(notes[i], i);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Clip snapshot builder
+// ---------------------------------------------------------------------------
+
+export async function buildClipSnapshot(client, trackIndex, clipIndex) {
+  const [, , name] = await client.query('/live/clip/get/name', [trackIndex, clipIndex], TIMEOUTS.QUERY);
+  const [, , length] = await client.query('/live/clip/get/length', [trackIndex, clipIndex], TIMEOUTS.QUERY);
+  const [, , loopStart] = await client.query('/live/clip/get/loop_start', [trackIndex, clipIndex], TIMEOUTS.QUERY);
+  const [, , loopEnd] = await client.query('/live/clip/get/loop_end', [trackIndex, clipIndex], TIMEOUTS.QUERY);
+  const [, , looping] = await client.query('/live/clip/get/looping', [trackIndex, clipIndex], TIMEOUTS.QUERY);
+  const [, , isMidi] = await client.query('/live/clip/get/is_midi_clip', [trackIndex, clipIndex], TIMEOUTS.QUERY);
+
+  const noteResponse = await client.query('/live/clip/get/notes', [trackIndex, clipIndex], TIMEOUTS.QUERY);
+  const noteData = noteResponse.slice(2);
+  const noteCount = Math.floor(noteData.length / 5);
+
+  return {
+    track_index: trackIndex,
+    clip_index: clipIndex,
+    name,
+    length,
+    loop_start: loopStart,
+    loop_end: loopEnd,
+    looping: !!looping,
+    is_midi: !!isMidi,
+    note_count: noteCount
+  };
 }
