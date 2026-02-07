@@ -49,13 +49,13 @@
 - [x] **DEV-02**: Claude can toggle devices on/off
 - [x] **DEV-03**: Claude can get and set device parameters
 - [x] **DEV-04**: Claude can load instruments and effects from browser
-- [ ] **DEV-05**: Claude can use human-readable parameter names for Ableton native devices
-- [ ] **DEV-06**: Claude can browse and load presets for native devices
+- [x] **DEV-05**: Claude can use human-readable parameter names for Ableton native devices *(fulfilled via CLAUDE.md Device Parameter Quick Reference)*
+- [~] **DEV-06**: Claude can browse and load presets for native devices *(AbletonOSC limitation — no browser API for preset navigation)*
 
 ### Session Awareness
 
-- [ ] **SESS-01**: Claude can get a complete session state snapshot (tracks, clips, devices, parameters, routing)
-- [ ] **SESS-02**: Claude can get project statistics (track counts, clip counts, device chains, tempo overview)
+- [x] **SESS-01**: Claude can get a complete session state snapshot (tracks, clips, devices, parameters, routing)
+- [x] **SESS-02**: Claude can get project statistics (track counts, clip counts, device chains, tempo overview)
 
 ### Sample Intelligence
 
@@ -126,10 +126,10 @@
 | DEV-02 | Phase 6 | Complete |
 | DEV-03 | Phase 6 | Complete |
 | DEV-04 | Phase 6 | Complete |
-| DEV-05 | Phase 8 | Pending (stretch) |
-| DEV-06 | Phase 8 | Pending (stretch) |
-| SESS-01 | Phase 7 | Pending |
-| SESS-02 | Phase 7 | Pending |
+| DEV-05 | Phase 8 | Complete (via CLAUDE.md documentation) |
+| DEV-06 | Phase 8 | Infeasible (no AbletonOSC browser API) |
+| SESS-01 | Phase 7 | Complete |
+| SESS-02 | Phase 7 | Complete |
 | SAMP-01 | Phase 5 | Complete |
 | SAMP-02 | Phase 5 | Complete |
 | SAMP-03 | Phase 5 | Complete |
@@ -152,4 +152,4 @@
 
 ---
 *Requirements defined: 2026-02-05*
-*Last updated: 2026-02-06 after Phase 6 completion*
+*Last updated: 2026-02-07 after Phase 8 completion (milestone complete)*
