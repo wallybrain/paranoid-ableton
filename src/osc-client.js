@@ -1,4 +1,5 @@
 import osc from 'osc';
+import { log } from './logger.js';
 
 /**
  * Context-aware timeout values for different OSC operation types
@@ -205,8 +206,7 @@ export class OscClient {
       return;
     }
 
-    // Unhandled message - log at debug level if needed
-    // (In production, this would use a logger)
+    log('debug', 'Unhandled OSC message', { address });
   }
 
   /**
@@ -242,8 +242,9 @@ export class OscClient {
     const classified = this.classifyError(err);
 
     if (classified.type === 'PORT_IN_USE') {
-      console.error(`OSC Port Error: ${classified.message}`);
-      console.error(`Check if another process is using port ${this.receivePort}`);
+      log('error', 'OSC port conflict', { message: classified.message, port: this.receivePort });
+    } else {
+      log('error', 'OSC error', { type: classified.type, message: classified.message });
     }
   }
 
@@ -321,5 +322,47 @@ export class OscClient {
         '4. Check firewall settings for UDP port ' + this.receivePort
       );
     }
+  }
+
+  async reconnect(maxRetries = 3) {
+    let delay = 500;
+    const maxDelay = 5000;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      log('warn', 'Reconnection attempt', { attempt, maxRetries, delay });
+
+      await new Promise(resolve => setTimeout(resolve, delay));
+
+      try {
+        await this.close();
+
+        this.udpPort = new osc.UDPPort({
+          localAddress: this.host,
+          localPort: this.receivePort,
+          remoteAddress: this.host,
+          remotePort: this.sendPort,
+          metadata: true
+        });
+
+        this.udpPort.on('message', this.handleMessage.bind(this));
+        this.udpPort.on('error', this.handleError.bind(this));
+        this.udpPort.on('ready', () => { this.isReady = true; });
+
+        await this.open();
+
+        const healthy = await this.healthCheck();
+        if (healthy) {
+          log('info', 'Reconnected to Ableton', { attempt });
+          return true;
+        }
+      } catch (err) {
+        log('warn', 'Reconnection attempt failed', { attempt, error: err.message });
+      }
+
+      delay = Math.min(delay * 2, maxDelay);
+    }
+
+    log('error', 'All reconnection attempts failed', { maxRetries });
+    return false;
   }
 }
