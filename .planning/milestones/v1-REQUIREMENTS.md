@@ -1,4 +1,12 @@
-# Requirements: Paranoid Ableton
+# Requirements Archive: v1 Paranoid Ableton
+
+**Archived:** 2026-02-07
+**Status:** SHIPPED
+
+This is the archived requirements specification for v1.
+For current requirements, see `.planning/REQUIREMENTS.md` (created for next milestone).
+
+---
 
 **Defined:** 2026-02-05
 **Core Value:** Claude can see and manipulate an Ableton Live session as a creative co-pilot
@@ -63,38 +71,6 @@
 - [x] **SAMP-02**: Claude can search samples by instrument type, key, BPM, or character
 - [x] **SAMP-03**: Claude can load found samples into tracks or instruments
 
-## v2 Requirements
-
-### Arrangement View
-
-- **ARR-01**: Claude can create and edit automation envelopes
-- **ARR-02**: Claude can work with arrangement view clips and positioning
-
-### Advanced Plugin Control
-
-- **PLG-01**: Claude can control third-party VST/AU plugin parameters with normalized names
-- **PLG-02**: Claude can save and recall plugin states
-
-### Real-Time Performance
-
-- **PERF-01**: Claude can trigger clips with low-latency for live performance use
-
-### Audio Analysis
-
-- **AUD-01**: Claude can analyze audio output characteristics (spectrum, loudness)
-
-## Out of Scope
-
-| Feature | Reason |
-|---------|--------|
-| Custom audio engine | Ableton already has world-class audio engine — control it, don't replace it |
-| Terminal UI for mixing | Music production is visual/auditory — keep visual work in Ableton |
-| Real-time triggering (v1) | MCP has 10-50ms network latency, not suitable for live triggering |
-| Audio file streaming | Large binary data inefficient over JSON-RPC — use file paths instead |
-| Universal VST/AU parameter mapping | Plugin parameter APIs are inconsistent across vendors — Ableton native only in v1 |
-| Max for Live device development | Using AbletonOSC Remote Script as bridge — keeps M4L free for music |
-| Multi-model orchestration | One Claude session controls one Live session |
-
 ## Traceability
 
 | Requirement | Phase | Status |
@@ -136,20 +112,21 @@
 
 **Coverage:**
 - v1 requirements: 34 total
-- Mapped to phases: 34 (100%)
-- Core requirements (Phases 1-7): 32
-- Stretch items (Phase 8): 2 (DEV-05, DEV-06)
-
-**Phase Distribution:**
-- Phase 1: Infrastructure (addresses 4/7 critical pitfalls)
-- Phase 2: Infrastructure (MCP framework)
-- Phase 3: 19 requirements (Transport, Tracks, Mixer, Scenes/Clips)
-- Phase 4: 4 requirements (MIDI Editing)
-- Phase 5: 3 requirements (Sample Intelligence) — parallel with 3-4
-- Phase 6: 4 requirements (Device Control core)
-- Phase 7: 2 requirements (Session Awareness)
-- Phase 8: 2 requirements (Device Control stretch items)
+- Shipped: 32 (94%)
+- Blocked by external limitations: 2 (TRNS-06, DEV-06)
 
 ---
-*Requirements defined: 2026-02-05*
-*Last updated: 2026-02-07 after Phase 8 completion (milestone complete)*
+
+## Milestone Summary
+
+**Shipped:** 32 of 34 v1 requirements (94%)
+
+**Adjusted during implementation:**
+- DEV-05: Originally "human-readable parameter names in code" → fulfilled via CLAUDE.md documentation + device_get_parameters runtime discovery (Phase 8 decision)
+
+**Blocked (external):**
+- TRNS-06: Song name/save — AbletonOSC does not expose these endpoints
+- DEV-06: Preset browsing — AbletonOSC has no browser API for preset navigation
+
+---
+*Archived: 2026-02-07 as part of v1 milestone completion*
