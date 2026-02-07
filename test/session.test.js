@@ -1,6 +1,6 @@
 import { describe, it, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { setOscClient, resetClient } from '../src/tools/shared.js';
+import { setOscClient, resetClient, resetConnectionState } from '../src/tools/shared.js';
 import { buildTrackDetailSnapshot, buildSessionSnapshot, buildSessionStats } from '../src/tools/helpers.js';
 import { handle } from '../src/tools/session.js';
 
@@ -12,6 +12,9 @@ function createMockClient(responseMap) {
   return {
     isReady: true,
     async open() { this.isReady = true; },
+    async close() { this.isReady = false; },
+    async ensureConnected() {},
+    async reconnect() { return false; },
     async query(address, args) {
       const key = address + (args && args.length ? ':' + args.join(',') : '');
       if (responseMap[key] !== undefined) return responseMap[key];
@@ -210,6 +213,7 @@ describe('buildSessionStats', () => {
 describe('session handle()', () => {
   afterEach(() => {
     resetClient();
+    resetConnectionState();
   });
 
   it('session_snapshot returns JSON response', async () => {

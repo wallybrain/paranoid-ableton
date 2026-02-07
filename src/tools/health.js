@@ -17,7 +17,12 @@ export async function handle(name, args) {
 
   let client;
   try {
-    client = await ensureConnected();
+    client = getOscClient();
+
+    if (!client.isReady) {
+      await client.open();
+    }
+
     const healthy = await client.healthCheck();
 
     if (healthy) {

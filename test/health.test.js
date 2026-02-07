@@ -1,16 +1,22 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { handle, tools } from '../src/tools/health.js';
-import { resetClient, setOscClient } from '../src/tools/shared.js';
+import { resetClient, setOscClient, resetConnectionState } from '../src/tools/shared.js';
 
 function createMockOscClient(overrides = {}) {
-  return {
+  const mock = {
     isReady: true,
     host: '127.0.0.1',
     sendPort: 11001,
     receivePort: 11000,
     async open() { this.isReady = true; },
+    async close() { this.isReady = false; },
     async healthCheck() { return true; },
+    async ensureConnected() {
+      const healthy = await this.healthCheck();
+      if (!healthy) throw new Error('AbletonOSC health check failed');
+    },
+    async reconnect() { return false; },
     classifyError(err) {
       const msg = err?.message?.toLowerCase() || '';
       if (msg.includes('timeout')) return { type: 'TIMEOUT', message: err.message, recoverable: true };
@@ -20,6 +26,7 @@ function createMockOscClient(overrides = {}) {
     },
     ...overrides
   };
+  return mock;
 }
 
 describe('health tool definition', () => {
@@ -40,6 +47,7 @@ describe('handle() - routing', () => {
 describe('handle() - success path', () => {
   beforeEach(() => {
     resetClient();
+    resetConnectionState();
   });
 
   it('returns connected:true when healthCheck succeeds', async () => {
@@ -81,6 +89,7 @@ describe('handle() - success path', () => {
 describe('handle() - health check fails (Ableton not reachable)', () => {
   beforeEach(() => {
     resetClient();
+    resetConnectionState();
   });
 
   it('returns isError:true when healthCheck returns false', async () => {
@@ -103,6 +112,7 @@ describe('handle() - health check fails (Ableton not reachable)', () => {
 describe('handle() - connection not established (open throws)', () => {
   beforeEach(() => {
     resetClient();
+    resetConnectionState();
   });
 
   it('returns isError:true when open() throws', async () => {
@@ -128,6 +138,7 @@ describe('handle() - connection not established (open throws)', () => {
 describe('handle() - timeout', () => {
   beforeEach(() => {
     resetClient();
+    resetConnectionState();
   });
 
   it('returns isError:true on timeout', async () => {
@@ -150,6 +161,7 @@ describe('handle() - timeout', () => {
 describe('handle() - port conflict', () => {
   beforeEach(() => {
     resetClient();
+    resetConnectionState();
   });
 
   it('returns isError:true on EADDRINUSE', async () => {
@@ -178,6 +190,7 @@ describe('handle() - port conflict', () => {
 describe('handle() - internal error', () => {
   beforeEach(() => {
     resetClient();
+    resetConnectionState();
   });
 
   it('returns isError:true with INTERNAL_ERROR for unknown errors', async () => {
