@@ -141,12 +141,12 @@ Plans:
   3. Claude can browse and load presets for native devices (if AbletonOSC supports)
   4. Connection errors provide clear guidance (check Ableton running, AbletonOSC loaded, port conflicts)
   5. All error states handle gracefully without crashing server
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 08-01: TBD
-- [ ] 08-02: TBD
-- [ ] 08-03: TBD
+- [ ] 08-01-PLAN.md — Structured JSON logger, OscClient reconnection, auto health check with promise lock
+- [ ] 08-02-PLAN.md — Startup validation and graceful error handling in index.js
+- [ ] 08-03-PLAN.md — Production README.md, CLAUDE.md with tool reference and DEV-05 parameter guidance, MCP registration
 
 ## Progress
 
@@ -162,4 +162,4 @@ Phases execute in numeric order. Phase 5 can run parallel with Phases 3-4.
 | 5. Sample Indexer | 3/3 | Complete | 2026-02-06 |
 | 6. Device Control | 2/2 | Complete | 2026-02-06 |
 | 7. Session Awareness | 2/2 | Complete | 2026-02-06 |
-| 8. Integration & Polish | 0/TBD | Not started | - |
+| 8. Integration & Polish | 0/3 | Not started | - |
