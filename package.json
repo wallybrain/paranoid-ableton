@@ -1,0 +1,21 @@
+{
+  "name": "paranoid-ableton",
+  "version": "0.1.0",
+  "description": "MCP server for Claude to Ableton Live 12 control via AbletonOSC",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test test/*.test.js",
+    "smoke": "node scripts/smoke-test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "music-metadata": "^11.11.2",
+    "osc": "^2.4.5"
+  }
+}
