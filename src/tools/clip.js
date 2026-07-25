@@ -1,5 +1,5 @@
 import { ensureConnected } from './shared.js';
-import { resolveTrackIndex, guardWrite, notesToFlatArray, flatArrayToNotes, validateNotes, buildClipSnapshot } from './helpers.js';
+import { resolveTrackIndex, resolveParameterIndex, guardWrite, notesToFlatArray, flatArrayToNotes, validateNotes, buildClipSnapshot } from './helpers.js';
 import { TIMEOUTS } from '../osc-client.js';
 
 export const tools = [
@@ -209,6 +209,67 @@ export const tools = [
       },
       required: ['track', 'scene']
     }
+  },
+  {
+    name: 'clip_add_automation',
+    description: 'Write automation envelope points for a device parameter into a clip. Points are step values; each holds until the next point (the last holds to clip end). Requires the AbletonOSC automation extension.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        track: {
+          description: 'Track index (0-based) or name'
+        },
+        scene: {
+          type: 'number',
+          description: '0-based scene/clip slot index'
+        },
+        device: {
+          type: 'number',
+          description: '0-based device index on the track'
+        },
+        parameter: {
+          description: 'Parameter name (string) or 0-based index (number)'
+        },
+        points: {
+          type: 'array',
+          description: 'Automation points, each {time (beats), value (raw parameter value), length (optional beats to hold)}',
+          items: {
+            type: 'object',
+            properties: {
+              time: { type: 'number' },
+              value: { type: 'number' },
+              length: { type: 'number' }
+            },
+            required: ['time', 'value']
+          }
+        }
+      },
+      required: ['track', 'scene', 'device', 'parameter', 'points']
+    }
+  },
+  {
+    name: 'clip_clear_automation',
+    description: 'Clear the automation envelope for a device parameter in a clip. Requires the AbletonOSC automation extension.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        track: {
+          description: 'Track index (0-based) or name'
+        },
+        scene: {
+          type: 'number',
+          description: '0-based scene/clip slot index'
+        },
+        device: {
+          type: 'number',
+          description: '0-based device index on the track'
+        },
+        parameter: {
+          description: 'Parameter name (string) or 0-based index (number)'
+        }
+      },
+      required: ['track', 'scene', 'device', 'parameter']
+    }
   }
 ];
 
@@ -387,6 +448,52 @@ export async function handle(name, args) {
 
         const snapshot = await buildClipSnapshot(client, trackIndex, args.scene);
         return jsonResponse(snapshot);
+      }
+
+      case 'clip_add_automation': {
+        const blocked = guardWrite('clip_add_automation');
+        if (blocked) return blocked;
+        const client = await ensureConnected();
+        const trackIndex = await resolveTrackIndex(client, args.track);
+        const paramIndex = await resolveParameterIndex(client, trackIndex, args.device, args.parameter);
+
+        if (!Array.isArray(args.points) || args.points.length === 0) {
+          return errorResponse('MISSING_PARAMS: points must be a non-empty array of {time, value}.');
+        }
+
+        const [, , clipLength] = await client.query('/live/clip/get/length', [trackIndex, args.scene], TIMEOUTS.QUERY);
+        const points = [...args.points].sort((a, b) => a.time - b.time);
+
+        for (let i = 0; i < points.length; i++) {
+          const p = points[i];
+          const nextTime = i + 1 < points.length ? points[i + 1].time : clipLength;
+          const length = p.length ?? Math.max(nextTime - p.time, 0.01);
+          client.send('/live/clip/add/automation', [trackIndex, args.scene, args.device, paramIndex, p.time, length, p.value]);
+        }
+
+        return jsonResponse({
+          track_index: trackIndex,
+          clip_index: args.scene,
+          device_index: args.device,
+          parameter_index: paramIndex,
+          points_written: points.length
+        });
+      }
+
+      case 'clip_clear_automation': {
+        const blocked = guardWrite('clip_clear_automation');
+        if (blocked) return blocked;
+        const client = await ensureConnected();
+        const trackIndex = await resolveTrackIndex(client, args.track);
+        const paramIndex = await resolveParameterIndex(client, trackIndex, args.device, args.parameter);
+        client.send('/live/clip/clear/automation', [trackIndex, args.scene, args.device, paramIndex]);
+        return jsonResponse({
+          track_index: trackIndex,
+          clip_index: args.scene,
+          device_index: args.device,
+          parameter_index: paramIndex,
+          cleared: true
+        });
       }
 
       default:
