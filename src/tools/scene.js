@@ -134,15 +134,15 @@ export async function handle(name, args) {
 
         const scenes = [];
         for (let s = 0; s < numScenes; s++) {
-          const [sceneName] = await client.query('/live/scene/get/name', [s]);
+          const [, sceneName] = await client.query('/live/scene/get/name', [s]);
           const sceneData = { index: s, name: sceneName };
 
           if (includeClips) {
             const clips = [];
             for (let t = 0; t < numTracks; t++) {
-              const [hasClip] = await client.query('/live/clip_slot/get/has_clip', [t, s]);
+              const [, , hasClip] = await client.query('/live/clip_slot/get/has_clip', [t, s]);
               if (hasClip) {
-                const [trackName] = await client.query('/live/track/get/name', [t]);
+                const [, trackName] = await client.query('/live/track/get/name', [t]);
                 clips.push({ track_index: t, track_name: trackName });
               }
             }
@@ -159,7 +159,7 @@ export async function handle(name, args) {
         const blocked = guardWrite('scene_launch');
         if (blocked) return blocked;
         const client = await ensureConnected();
-        await client.query('/live/scene/fire', [args.scene], TIMEOUTS.COMMAND);
+        client.send('/live/scene/fire', [args.scene]);
         return jsonResponse({ launched: true, scene: args.scene });
       }
 
@@ -167,7 +167,7 @@ export async function handle(name, args) {
         const blocked = guardWrite('scene_stop');
         if (blocked) return blocked;
         const client = await ensureConnected();
-        await client.query('/live/song/stop_all_clips', [], TIMEOUTS.COMMAND);
+        client.send('/live/song/stop_all_clips');
         return jsonResponse({ stopped: true });
       }
 
@@ -176,7 +176,7 @@ export async function handle(name, args) {
         if (blocked) return blocked;
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        await client.query('/live/clip/fire', [trackIndex, args.scene], TIMEOUTS.COMMAND);
+        client.send('/live/clip/fire', [trackIndex, args.scene]);
         return jsonResponse({ launched: true, track: trackIndex, scene: args.scene });
       }
 
@@ -185,7 +185,7 @@ export async function handle(name, args) {
         if (blocked) return blocked;
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        await client.query('/live/clip/stop', [trackIndex, args.scene], TIMEOUTS.COMMAND);
+        client.send('/live/clip/stop', [trackIndex, args.scene]);
         return jsonResponse({ stopped: true, track: trackIndex, scene: args.scene });
       }
 
@@ -193,7 +193,7 @@ export async function handle(name, args) {
         const blocked = guardWrite('scene_create');
         if (blocked) return blocked;
         const client = await ensureConnected();
-        await client.query('/live/song/create_scene', [args.index ?? -1], TIMEOUTS.COMMAND);
+        client.send('/live/song/create_scene', [args.index ?? -1]);
         const [numScenes] = await client.query('/live/song/get/num_scenes');
         return jsonResponse({ created: true, total_scenes: numScenes });
       }
@@ -202,7 +202,7 @@ export async function handle(name, args) {
         const blocked = guardWrite('scene_rename');
         if (blocked) return blocked;
         const client = await ensureConnected();
-        await client.query('/live/scene/set/name', [args.scene, args.name], TIMEOUTS.COMMAND);
+        client.send('/live/scene/set/name', [args.scene, args.name]);
         return jsonResponse({ renamed: true, scene: args.scene, name: args.name });
       }
 

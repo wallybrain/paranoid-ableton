@@ -237,7 +237,7 @@ export async function handle(name, args) {
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
 
-        const [, , hasMidi] = await client.query('/live/track/get/has_midi_input', [trackIndex], TIMEOUTS.QUERY);
+        const [, hasMidi] = await client.query('/live/track/get/has_midi_input', [trackIndex], TIMEOUTS.QUERY);
         if (!hasMidi) {
           return errorResponse('INVALID_TRACK: Track ' + trackIndex + ' is not a MIDI track. Can only create MIDI clips on MIDI tracks.');
         }
@@ -248,10 +248,10 @@ export async function handle(name, args) {
           return errorResponse('SLOT_NOT_EMPTY: Clip slot [' + trackIndex + ', ' + args.scene + '] already contains a clip. Delete it first or use a different slot.');
         }
 
-        await client.query('/live/clip_slot/create_clip', [trackIndex, args.scene, args.length || 4.0], TIMEOUTS.COMMAND);
+        client.send('/live/clip_slot/create_clip', [trackIndex, args.scene, args.length || 4.0]);
 
         if (args.name) {
-          await client.query('/live/clip/set/name', [trackIndex, args.scene, args.name], TIMEOUTS.COMMAND);
+          client.send('/live/clip/set/name', [trackIndex, args.scene, args.name]);
         }
 
         const snapshot = await buildClipSnapshot(client, trackIndex, args.scene);
@@ -263,7 +263,7 @@ export async function handle(name, args) {
         if (blocked) return blocked;
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        await client.query('/live/clip_slot/delete_clip', [trackIndex, args.scene], TIMEOUTS.COMMAND);
+        client.send('/live/clip_slot/delete_clip', [trackIndex, args.scene]);
         return jsonResponse({ deleted: true, track_index: trackIndex, clip_index: args.scene });
       }
 
@@ -279,7 +279,7 @@ export async function handle(name, args) {
         if (blocked) return blocked;
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        await client.query('/live/clip/set/name', [trackIndex, args.scene, args.name], TIMEOUTS.COMMAND);
+        client.send('/live/clip/set/name', [trackIndex, args.scene, args.name]);
         const snapshot = await buildClipSnapshot(client, trackIndex, args.scene);
         return jsonResponse(snapshot);
       }
@@ -296,10 +296,10 @@ export async function handle(name, args) {
         if (args.notes.length > CHUNK_SIZE) {
           for (let i = 0; i < flat.length; i += CHUNK_SIZE * 5) {
             const chunk = flat.slice(i, i + CHUNK_SIZE * 5);
-            await client.query('/live/clip/add/notes', [trackIndex, args.scene, ...chunk], TIMEOUTS.COMMAND);
+            client.send('/live/clip/add/notes', [trackIndex, args.scene, ...chunk]);
           }
         } else {
-          await client.query('/live/clip/add/notes', [trackIndex, args.scene, ...flat], TIMEOUTS.COMMAND);
+          client.send('/live/clip/add/notes', [trackIndex, args.scene, ...flat]);
         }
 
         const snapshot = await buildClipSnapshot(client, trackIndex, args.scene);
@@ -367,22 +367,22 @@ export async function handle(name, args) {
         }
 
         if (args.looping !== undefined) {
-          await client.query('/live/clip/set/looping', [trackIndex, args.scene, args.looping ? 1 : 0], TIMEOUTS.COMMAND);
+          client.send('/live/clip/set/looping', [trackIndex, args.scene, args.looping ? 1 : 0]);
         }
 
         if (args.loop_start !== undefined && args.loop_end !== undefined) {
           const [, , currentLoopEnd] = await client.query('/live/clip/get/loop_end', [trackIndex, args.scene], TIMEOUTS.QUERY);
           if (args.loop_end > currentLoopEnd) {
-            await client.query('/live/clip/set/loop_end', [trackIndex, args.scene, args.loop_end], TIMEOUTS.COMMAND);
-            await client.query('/live/clip/set/loop_start', [trackIndex, args.scene, args.loop_start], TIMEOUTS.COMMAND);
+            client.send('/live/clip/set/loop_end', [trackIndex, args.scene, args.loop_end]);
+            client.send('/live/clip/set/loop_start', [trackIndex, args.scene, args.loop_start]);
           } else {
-            await client.query('/live/clip/set/loop_start', [trackIndex, args.scene, args.loop_start], TIMEOUTS.COMMAND);
-            await client.query('/live/clip/set/loop_end', [trackIndex, args.scene, args.loop_end], TIMEOUTS.COMMAND);
+            client.send('/live/clip/set/loop_start', [trackIndex, args.scene, args.loop_start]);
+            client.send('/live/clip/set/loop_end', [trackIndex, args.scene, args.loop_end]);
           }
         } else if (args.loop_start !== undefined) {
-          await client.query('/live/clip/set/loop_start', [trackIndex, args.scene, args.loop_start], TIMEOUTS.COMMAND);
+          client.send('/live/clip/set/loop_start', [trackIndex, args.scene, args.loop_start]);
         } else if (args.loop_end !== undefined) {
-          await client.query('/live/clip/set/loop_end', [trackIndex, args.scene, args.loop_end], TIMEOUTS.COMMAND);
+          client.send('/live/clip/set/loop_end', [trackIndex, args.scene, args.loop_end]);
         }
 
         const snapshot = await buildClipSnapshot(client, trackIndex, args.scene);

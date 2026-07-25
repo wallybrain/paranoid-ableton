@@ -145,7 +145,7 @@ export async function handle(name, args) {
           ? '/live/song/create_midi_track'
           : '/live/song/create_audio_track';
         const index = args.index ?? -1;
-        await client.query(address, [index], TIMEOUTS.COMMAND);
+        client.send(address, [index]);
         const [numTracks] = await client.query('/live/song/get/num_tracks');
         const newIndex = index === -1 ? numTracks - 1 : index;
         const snapshot = await buildTrackSnapshot(client, newIndex);
@@ -176,7 +176,7 @@ export async function handle(name, args) {
           );
         }
 
-        await client.query('/live/song/delete_track', [trackIndex], TIMEOUTS.COMMAND);
+        client.send('/live/song/delete_track', [trackIndex]);
         clearPendingDelete(trackIndex);
         return jsonResponse({
           deleted: true,
@@ -190,7 +190,7 @@ export async function handle(name, args) {
         if (blocked) return blocked;
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        await client.query('/live/view/set/selected_track', [trackIndex], TIMEOUTS.COMMAND);
+        client.send('/live/view/set/selected_track', [trackIndex]);
         const snapshot = await buildTrackSnapshot(client, trackIndex);
         return jsonResponse({ selected: true, track: snapshot });
       }
@@ -200,7 +200,7 @@ export async function handle(name, args) {
         if (blocked) return blocked;
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        await client.query('/live/track/set/arm', [trackIndex, args.armed ? 1 : 0], TIMEOUTS.COMMAND);
+        client.send('/live/track/set/arm', [trackIndex, args.armed ? 1 : 0]);
         const snapshot = await buildTrackSnapshot(client, trackIndex);
         return jsonResponse(snapshot);
       }
@@ -210,7 +210,7 @@ export async function handle(name, args) {
         if (blocked) return blocked;
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        await client.query('/live/track/set/name', [trackIndex, args.name], TIMEOUTS.COMMAND);
+        client.send('/live/track/set/name', [trackIndex, args.name]);
         const snapshot = await buildTrackSnapshot(client, trackIndex);
         return jsonResponse(snapshot);
       }

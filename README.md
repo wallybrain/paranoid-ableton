@@ -71,8 +71,8 @@ The server bridges Claude and Ableton through [AbletonOSC](https://github.com/id
 | Variable | Default | Description |
 |---|---|---|
 | `LOG_LEVEL` | `info` | Logging verbosity: debug, info, warn, error |
-| `OSC_SEND_PORT` | `11001` | UDP port for sending to AbletonOSC |
-| `OSC_RECEIVE_PORT` | `11000` | UDP port for receiving from AbletonOSC |
+| `OSC_SEND_PORT` | `11000` | UDP port for sending to AbletonOSC (AbletonOSC listen port) |
+| `OSC_RECEIVE_PORT` | `11001` | UDP port for receiving from AbletonOSC (AbletonOSC response port) |
 | `OSC_HOST` | `127.0.0.1` | Host address for OSC communication |
 
 ## Troubleshooting

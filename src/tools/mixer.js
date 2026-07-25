@@ -165,7 +165,7 @@ export async function handle(name, args) {
       case 'mixer_get_volume': {
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        const [volume] = await client.query('/live/track/get/volume', [trackIndex]);
+        const [, volume] = await client.query('/live/track/get/volume', [trackIndex]);
         return jsonResponse({
           track: trackIndex,
           volume: { normalized: volume, db: normalizedToDb(volume) }
@@ -178,7 +178,7 @@ export async function handle(name, args) {
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
         const normalizedValue = parseVolumeInput(args.volume);
-        await client.query('/live/track/set/volume', [trackIndex, normalizedValue], TIMEOUTS.COMMAND);
+        client.send('/live/track/set/volume', [trackIndex, normalizedValue]);
         const snapshot = await buildTrackSnapshot(client, trackIndex);
         return jsonResponse(snapshot);
       }
@@ -186,7 +186,7 @@ export async function handle(name, args) {
       case 'mixer_get_pan': {
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        const [panning] = await client.query('/live/track/get/panning', [trackIndex]);
+        const [, panning] = await client.query('/live/track/get/panning', [trackIndex]);
         return jsonResponse({
           track: trackIndex,
           pan: { normalized: panning, midi: floatPanToMidi(panning) }
@@ -199,7 +199,7 @@ export async function handle(name, args) {
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
         const floatValue = parsePanInput(args.pan);
-        await client.query('/live/track/set/panning', [trackIndex, floatValue], TIMEOUTS.COMMAND);
+        client.send('/live/track/set/panning', [trackIndex, floatValue]);
         const snapshot = await buildTrackSnapshot(client, trackIndex);
         return jsonResponse(snapshot);
       }
@@ -209,7 +209,7 @@ export async function handle(name, args) {
         if (blocked) return blocked;
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        await client.query('/live/track/set/mute', [trackIndex, args.muted ? 1 : 0], TIMEOUTS.COMMAND);
+        client.send('/live/track/set/mute', [trackIndex, args.muted ? 1 : 0]);
         const snapshot = await buildTrackSnapshot(client, trackIndex);
         return jsonResponse(snapshot);
       }
@@ -219,7 +219,7 @@ export async function handle(name, args) {
         if (blocked) return blocked;
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        await client.query('/live/track/set/solo', [trackIndex, args.soloed ? 1 : 0], TIMEOUTS.COMMAND);
+        client.send('/live/track/set/solo', [trackIndex, args.soloed ? 1 : 0]);
         const snapshot = await buildTrackSnapshot(client, trackIndex);
         return jsonResponse(snapshot);
       }
@@ -227,7 +227,7 @@ export async function handle(name, args) {
       case 'mixer_get_send': {
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        const [level] = await client.query('/live/track/get/send', [trackIndex, args.send]);
+        const [, , level] = await client.query('/live/track/get/send', [trackIndex, args.send]);
         return jsonResponse({
           track: trackIndex,
           send_index: args.send,
@@ -240,7 +240,7 @@ export async function handle(name, args) {
         if (blocked) return blocked;
         const client = await ensureConnected();
         const trackIndex = await resolveTrackIndex(client, args.track);
-        await client.query('/live/track/set/send', [trackIndex, args.send, args.level], TIMEOUTS.COMMAND);
+        client.send('/live/track/set/send', [trackIndex, args.send, args.level]);
         const snapshot = await buildTrackSnapshot(client, trackIndex);
         return jsonResponse(snapshot);
       }

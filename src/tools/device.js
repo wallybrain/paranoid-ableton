@@ -370,7 +370,7 @@ export async function handle(name, args) {
         const trackIndex = await resolveTrackIndex(client, args.track);
 
         // Select target track first (PR #174 fix for browser.load_item targeting wrong track)
-        await client.query('/live/view/set/selected_track', [trackIndex], TIMEOUTS.COMMAND);
+        client.send('/live/view/set/selected_track', [trackIndex]);
 
         let loadResp;
         try {

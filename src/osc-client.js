@@ -25,8 +25,8 @@ export const TIMEOUTS = {
 export class OscClient {
   constructor(options = {}) {
     // Port configuration with env var support
-    this.sendPort = options.sendPort || parseInt(process.env.OSC_SEND_PORT) || 11001;
-    this.receivePort = options.receivePort || parseInt(process.env.OSC_RECEIVE_PORT) || 11000;
+    this.sendPort = options.sendPort || parseInt(process.env.OSC_SEND_PORT) || 11000;
+    this.receivePort = options.receivePort || parseInt(process.env.OSC_RECEIVE_PORT) || 11001;
     this.host = options.host || process.env.OSC_HOST || '127.0.0.1';
 
     // State management
@@ -174,6 +174,24 @@ export class OscClient {
     this.requestQueues.set(address, queryPromise);
 
     return queryPromise;
+  }
+
+  /**
+   * Send a fire-and-forget OSC message (no response expected).
+   * Use this for all set/command operations that don't return a response.
+   *
+   * @param {string} address - OSC address pattern
+   * @param {Array} args - OSC arguments
+   */
+  send(address, args = []) {
+    if (!this.isReady) {
+      throw new Error('OSC client not ready. Call open() first.');
+    }
+    const oscArgs = args.map(arg => ({
+      type: this.inferType(arg),
+      value: arg
+    }));
+    this.udpPort.send({ address, args: oscArgs });
   }
 
   /**
