@@ -240,7 +240,7 @@ export async function handle(name, args) {
         const [, , , paramName] = await client.query('/live/device/get/parameter/name', [trackIndex, args.device, 0], TIMEOUTS.QUERY);
 
         if (paramName === 'Device On') {
-          await client.query('/live/device/set/parameter/value', [trackIndex, args.device, 0, args.enabled ? 1.0 : 0.0], TIMEOUTS.COMMAND);
+          client.send('/live/device/set/parameter/value', [trackIndex, args.device, 0, args.enabled ? 1.0 : 0.0]);
           toggleParamIndex = 0;
         } else {
           const namesResp = await client.query('/live/device/get/parameters/name', [trackIndex, args.device], TIMEOUTS.QUERY);
@@ -249,7 +249,7 @@ export async function handle(name, args) {
           if (idx === -1) {
             return errorResponse('TOGGLE_UNSUPPORTED: Device has no "Device On" parameter and cannot be toggled via this API.');
           }
-          await client.query('/live/device/set/parameter/value', [trackIndex, args.device, idx, args.enabled ? 1.0 : 0.0], TIMEOUTS.COMMAND);
+          client.send('/live/device/set/parameter/value', [trackIndex, args.device, idx, args.enabled ? 1.0 : 0.0]);
           toggleParamIndex = idx;
         }
 
@@ -326,7 +326,7 @@ export async function handle(name, args) {
           return errorResponse('VALUE_OUT_OF_RANGE: Value ' + args.value + ' outside range [' + min + ', ' + max + '] for parameter "' + paramIndex + '"');
         }
 
-        await client.query('/live/device/set/parameter/value', [trackIndex, args.device, paramIndex, args.value], TIMEOUTS.COMMAND);
+        client.send('/live/device/set/parameter/value', [trackIndex, args.device, paramIndex, args.value]);
 
         const [, , , valueString] = await client.query('/live/device/get/parameter/value_string', [trackIndex, args.device, paramIndex], TIMEOUTS.QUERY);
 
