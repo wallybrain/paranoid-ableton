@@ -65,6 +65,8 @@ The server bridges Claude and Ableton through [AbletonOSC](https://github.com/id
 
 **Devices** -- Load native instruments and effects, toggle devices, get and set any parameter by name or index. Tools: `device_load`, `device_get_parameters`, `device_set_parameter`.
 
+**Arrangement View** -- Cue points/locators (list, add, delete, rename, jump), and arrangement-timeline clips (list, duplicate a session clip in, create empty MIDI clips, delete, rename). Tools: `arrangement_list_cue_points`, `arrangement_add_cue_point`, `arrangement_list_clips`, `arrangement_duplicate_clip`, `arrangement_create_midi_clip`. Requires the custom AbletonOSC extension -- see [Limitations](#limitations).
+
 **Samples** -- Scan directories with metadata extraction (BPM, key, instrument type), search semantically, get file paths for loading. Tools: `sample_scan`, `sample_search`.
 
 **Session Awareness** -- Full session snapshots and aggregate statistics to inform creative decisions. Tools: `session_snapshot`, `session_stats`.
@@ -90,7 +92,9 @@ The server bridges Claude and Ableton through [AbletonOSC](https://github.com/id
 - Nested items -- factory presets inside a device's own preset browser, user presets, Max for Live device variants -- aren't searched either, only the top-level device itself.
 - Requires the `insert_device` OSC handler, which is not in stock AbletonOSC (see Prerequisites).
 
-**Master/return mixer control and clip automation require a second, unpublished AbletonOSC patch.** Unlike `insert_device` (cherry-picked from a public upstream PR), the `/live/master/*`, `/live/return/*`, and `/live/clip/*/automation` OSC handlers behind `mixer_get_master`, `mixer_list_returns`, `clip_add_automation`, etc. are a custom extension written for this project that has not been published anywhere yet. If you clone this repo and connect it to a stock (or even `insert_device`-patched) AbletonOSC install, those tools will silently time out. Until the patch is published, treat them as available only on machines where it's been applied by hand.
+**Master/return mixer control, clip automation, and arrangement view all require a second, unpublished AbletonOSC patch.** Unlike `insert_device` (cherry-picked from a public upstream PR), the `/live/master/*`, `/live/return/*`, `/live/clip/*/automation`, `/live/song/*/cue_point`, and `/live/track/*arrangement*` OSC handlers behind `mixer_get_master`, `mixer_list_returns`, `clip_add_automation`, `arrangement_list_cue_points`, `arrangement_duplicate_clip`, etc. are a custom extension written for this project (currently on a `paranoid-ableton-extensions` branch of a local AbletonOSC clone) that has not been published anywhere yet. If you clone this repo and connect it to a stock (or even `insert_device`-patched) AbletonOSC install, those tools will silently time out. Until the patch is published, treat them as available only on machines where it's been applied by hand.
+
+**Adding/deleting a cue point is a toggle, not a direct create/delete.** The Live Object Model only exposes `Song.set_or_delete_cue()`, which toggles a cue point at the *current* playback position -- there's no "create at arbitrary time" primitive. `arrangement_add_cue_point`/`arrangement_delete_cue_point` work around this by briefly moving `current_song_time` to the target, toggling, and moving back. If you call `arrangement_add_cue_point` twice at the same time, the second call deletes the cue point instead of erroring.
 
 **No real-time state updates.** AbletonOSC supports `start_listen`/`stop_listen` for push-based property updates, but this server doesn't use them -- Claude only sees session state when it explicitly queries (`session_snapshot`, `track_list`, etc.), not live as things change in Ableton.
 

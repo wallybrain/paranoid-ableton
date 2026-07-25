@@ -7,11 +7,12 @@ import * as clip from './clip.js';
 import * as sample from './sample.js';
 import * as device from './device.js';
 import * as session from './session.js';
+import * as arrangement from './arrangement.js';
 import { ensureConnected } from './shared.js';
 import { guardWrite, isReadOnly, setReadOnly } from './helpers.js';
 import { TIMEOUTS } from '../osc-client.js';
 
-const modules = [health, transport, track, mixer, scene, clip, sample, device, session];
+const modules = [health, transport, track, mixer, scene, clip, sample, device, session, arrangement];
 
 const utilityTools = [
   {
