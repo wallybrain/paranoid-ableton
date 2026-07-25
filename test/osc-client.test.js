@@ -76,10 +76,10 @@ function createMockClient(options = {}) {
 }
 
 describe('OscClient constructor', () => {
-  it('creates instance with default ports (11001 send, 11000 receive)', () => {
+  it('creates instance with default ports (11000 send, 11001 receive)', () => {
     const client = new OscClient();
-    assert.equal(client.sendPort, 11001);
-    assert.equal(client.receivePort, 11000);
+    assert.equal(client.sendPort, 11000);
+    assert.equal(client.receivePort, 11001);
   });
 
   it('accepts custom port configuration', () => {

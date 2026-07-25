@@ -88,14 +88,14 @@ export async function handleToolCall(name, args) {
       const guard = guardWrite('undo');
       if (guard) return guard;
       const client = await ensureConnected();
-      await client.query('/live/song/undo', [], TIMEOUTS.COMMAND);
+      client.send('/live/song/undo', []);
       return { content: [{ type: 'text', text: JSON.stringify({ undone: true }) }] };
     }
     case 'redo': {
       const guard = guardWrite('redo');
       if (guard) return guard;
       const client = await ensureConnected();
-      await client.query('/live/song/redo', [], TIMEOUTS.COMMAND);
+      client.send('/live/song/redo', []);
       return { content: [{ type: 'text', text: JSON.stringify({ redone: true }) }] };
     }
     case 'set_read_only': {

@@ -1,12 +1,16 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { parseFile } from 'music-metadata';
 import { classifyFromPath } from './classifier.js';
 import { loadIndex, saveIndex, addEntry, getEntryByPath } from './index-store.js';
 
 const AUDIO_EXTENSIONS = new Set(['.wav', '.aiff', '.aif', '.flac', '.mp3', '.ogg', '.m4a']);
 const CONCURRENCY_LIMIT = 10;
-const DEFAULT_INDEX_PATH = path.join(process.cwd(), 'data', 'sample-index.json');
+
+// Anchor to the package root, not process.cwd() — see index-store.js
+const PACKAGE_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+const DEFAULT_INDEX_PATH = path.join(PACKAGE_ROOT, 'data', 'sample-index.json');
 
 let scanInProgress = false;
 

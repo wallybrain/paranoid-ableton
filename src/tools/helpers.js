@@ -114,7 +114,7 @@ export async function resolveTrackIndex(client, trackRef) {
   const [numTracks] = await client.query('/live/song/get/num_tracks');
 
   for (let i = 0; i < numTracks; i++) {
-    const [name] = await client.query('/live/track/get/name', [i]);
+    const [, name] = await client.query('/live/track/get/name', [i]);
     if (name === trackRef) return i;
   }
 
@@ -190,15 +190,15 @@ export async function buildTransportSnapshot(client) {
  * Build a track state snapshot from live OSC queries.
  */
 export async function buildTrackSnapshot(client, trackIndex) {
-  const [name] = await client.query('/live/track/get/name', [trackIndex]);
-  const [volume] = await client.query('/live/track/get/volume', [trackIndex]);
-  const [panning] = await client.query('/live/track/get/panning', [trackIndex]);
-  const [mute] = await client.query('/live/track/get/mute', [trackIndex]);
-  const [solo] = await client.query('/live/track/get/solo', [trackIndex]);
-  const [arm] = await client.query('/live/track/get/arm', [trackIndex]);
-  const [hasMidi] = await client.query('/live/track/get/has_midi_input', [trackIndex]);
-  const [hasAudio] = await client.query('/live/track/get/has_audio_input', [trackIndex]);
-  const [numDevices] = await client.query('/live/track/get/num_devices', [trackIndex]);
+  const [, name] = await client.query('/live/track/get/name', [trackIndex]);
+  const [, volume] = await client.query('/live/track/get/volume', [trackIndex]);
+  const [, panning] = await client.query('/live/track/get/panning', [trackIndex]);
+  const [, mute] = await client.query('/live/track/get/mute', [trackIndex]);
+  const [, solo] = await client.query('/live/track/get/solo', [trackIndex]);
+  const [, arm] = await client.query('/live/track/get/arm', [trackIndex]);
+  const [, hasMidi] = await client.query('/live/track/get/has_midi_input', [trackIndex]);
+  const [, hasAudio] = await client.query('/live/track/get/has_audio_input', [trackIndex]);
+  const [, numDevices] = await client.query('/live/track/get/num_devices', [trackIndex]);
 
   let type = 'unknown';
   if (hasMidi) type = 'midi';
@@ -348,9 +348,12 @@ export async function buildClipSnapshot(client, trackIndex, clipIndex) {
   const [, , looping] = await client.query('/live/clip/get/looping', [trackIndex, clipIndex], TIMEOUTS.QUERY);
   const [, , isMidi] = await client.query('/live/clip/get/is_midi_clip', [trackIndex, clipIndex], TIMEOUTS.QUERY);
 
-  const noteResponse = await client.query('/live/clip/get/notes', [trackIndex, clipIndex], TIMEOUTS.QUERY);
-  const noteData = noteResponse.slice(2);
-  const noteCount = Math.floor(noteData.length / 5);
+  let noteCount = 0;
+  if (isMidi) {
+    const noteResponse = await client.query('/live/clip/get/notes', [trackIndex, clipIndex], TIMEOUTS.QUERY);
+    const noteData = noteResponse.slice(2);
+    noteCount = Math.floor(noteData.length / 5);
+  }
 
   return {
     track_index: trackIndex,
@@ -488,11 +491,10 @@ export async function buildSessionStats(client) {
   const deviceSummary = {};
 
   for (let t = 0; t < numTracks; t++) {
-    const [hasMidi] = await client.query('/live/track/get/has_midi_input', [t]);
-    const [hasAudio] = await client.query('/live/track/get/has_audio_input', [t]);
-    const foldableResp = await client.query('/live/track/get/is_foldable', [t]);
-    const isFoldable = foldableResp[1];
-    const [numDevices] = await client.query('/live/track/get/num_devices', [t]);
+    const [, hasMidi] = await client.query('/live/track/get/has_midi_input', [t]);
+    const [, hasAudio] = await client.query('/live/track/get/has_audio_input', [t]);
+    const [, isFoldable] = await client.query('/live/track/get/is_foldable', [t]);
+    const [, numDevices] = await client.query('/live/track/get/num_devices', [t]);
 
     if (isFoldable) groupCount++;
     else if (hasMidi) midiCount++;

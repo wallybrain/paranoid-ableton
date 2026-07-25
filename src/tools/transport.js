@@ -137,7 +137,7 @@ export async function handle(name, args) {
         const blocked = guardWrite('transport_play');
         if (blocked) return blocked;
         const client = await ensureConnected();
-        await client.query('/live/song/start_playing', [], TIMEOUTS.COMMAND);
+        client.send('/live/song/start_playing');
         const snapshot = await buildTransportSnapshot(client);
         return jsonResponse(snapshot);
       }
@@ -146,7 +146,7 @@ export async function handle(name, args) {
         const blocked = guardWrite('transport_stop');
         if (blocked) return blocked;
         const client = await ensureConnected();
-        await client.query('/live/song/stop_playing', [], TIMEOUTS.COMMAND);
+        client.send('/live/song/stop_playing');
         const snapshot = await buildTransportSnapshot(client);
         return jsonResponse(snapshot);
       }
@@ -155,7 +155,7 @@ export async function handle(name, args) {
         const blocked = guardWrite('transport_continue');
         if (blocked) return blocked;
         const client = await ensureConnected();
-        await client.query('/live/song/continue_playing', [], TIMEOUTS.COMMAND);
+        client.send('/live/song/continue_playing');
         const snapshot = await buildTransportSnapshot(client);
         return jsonResponse(snapshot);
       }
@@ -170,7 +170,7 @@ export async function handle(name, args) {
           snapshot.note = 'Already recording';
           return jsonResponse(snapshot);
         }
-        await client.query('/live/song/trigger_session_record', [], TIMEOUTS.COMMAND);
+        client.send('/live/song/trigger_session_record');
         const snapshot = await buildTransportSnapshot(client);
         return jsonResponse(snapshot);
       }
@@ -187,7 +187,7 @@ export async function handle(name, args) {
         const client = await ensureConnected();
         const [currentTempo] = await client.query('/live/song/get/tempo');
         const newTempo = parseTempoInput(args.tempo, currentTempo);
-        await client.query('/live/song/set/tempo', [newTempo], TIMEOUTS.COMMAND);
+        client.send('/live/song/set/tempo', [newTempo]);
         const snapshot = await buildTransportSnapshot(client);
         return jsonResponse(snapshot);
       }
@@ -202,7 +202,7 @@ export async function handle(name, args) {
         const blocked = guardWrite('transport_set_position');
         if (blocked) return blocked;
         const client = await ensureConnected();
-        await client.query('/live/song/set/current_song_time', [args.position], TIMEOUTS.COMMAND);
+        client.send('/live/song/set/current_song_time', [args.position]);
         const snapshot = await buildTransportSnapshot(client);
         return jsonResponse(snapshot);
       }
@@ -217,7 +217,7 @@ export async function handle(name, args) {
         const blocked = guardWrite('transport_set_metronome');
         if (blocked) return blocked;
         const client = await ensureConnected();
-        await client.query('/live/song/set/metronome', [args.enabled ? 1 : 0], TIMEOUTS.COMMAND);
+        client.send('/live/song/set/metronome', [args.enabled ? 1 : 0]);
         const snapshot = await buildTransportSnapshot(client);
         return jsonResponse(snapshot);
       }

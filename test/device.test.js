@@ -20,6 +20,10 @@ function createMockClient(responseMap) {
       if (responseMap[key] !== undefined) return responseMap[key];
       if (responseMap[address] !== undefined) return responseMap[address];
       throw new Error('TIMEOUT: No mock response for ' + key);
+    },
+    sentMessages: [],
+    send(address, args) {
+      this.sentMessages.push({ address, args });
     }
   };
 }
@@ -190,9 +194,8 @@ describe('device handle()', () => {
   });
 
   it('device_load selects track before inserting', async () => {
-    const queryCalls = [];
+    const calls = [];
     const mock = createMockClient({
-      '/live/view/set/selected_track:0': [],
       '/live/track/insert_device:0,Reverb': [1],
       ...snapshotMocks(0, 1, {
         name: [0, 1, 'Reverb'],
@@ -201,11 +204,16 @@ describe('device handle()', () => {
         num_parameters: [0, 1, 10]
       })
     });
-    // Wrap query to track call order
+    // Wrap query and send to track call order across both
     const originalQuery = mock.query.bind(mock);
     mock.query = async function(address, args) {
-      queryCalls.push(address);
+      calls.push(address);
       return originalQuery(address, args);
+    };
+    const originalSend = mock.send.bind(mock);
+    mock.send = function(address, args) {
+      calls.push(address);
+      return originalSend(address, args);
     };
     setOscClient(mock);
 
@@ -214,9 +222,10 @@ describe('device handle()', () => {
     const data = JSON.parse(result.content[0].text);
     assert.equal(data.name, 'Reverb');
     // Verify track selection happened before insert
-    const selectIdx = queryCalls.indexOf('/live/view/set/selected_track');
-    const insertIdx = queryCalls.indexOf('/live/track/insert_device');
-    assert.ok(selectIdx < insertIdx, 'selected_track should be called before insert_device');
+    const selectIdx = calls.indexOf('/live/view/set/selected_track');
+    const insertIdx = calls.indexOf('/live/track/insert_device');
+    assert.ok(selectIdx !== -1, 'selected_track should be sent');
+    assert.ok(selectIdx < insertIdx, 'selected_track should be sent before insert_device');
   });
 
   it('returns null for non-device tool names', async () => {

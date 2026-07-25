@@ -1,7 +1,12 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const DEFAULT_INDEX_PATH = path.join(process.cwd(), 'data', 'sample-index.json');
+// Anchor to the package root, not process.cwd() — the MCP server is launched
+// with an arbitrary cwd (e.g. the Claude app install dir, which changes on
+// every app update and would orphan the index)
+const PACKAGE_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
+const DEFAULT_INDEX_PATH = path.join(PACKAGE_ROOT, 'data', 'sample-index.json');
 
 let indexEntries = [];
 let pathMap = new Map();
